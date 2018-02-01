@@ -73,7 +73,7 @@
     <Content Include="FarmDeploymentScript\sharepoint-three-vm\createUiDefinition.json" />
     <Content Include="FarmDeploymentScript\sharepoint-three-vm\creatingNICS.json" />
     <Content Include="FarmDeploymentScript\sharepoint-three-vm\creatingPublicIPs.json" />
-    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer.zip" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer.ps1.zip" />
     <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\Old-ConfigureSharePointServer.ps1.zip" />
     <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\cConfigureSharepoint\DSCResources\SAMPLE_cConfigureSharepoint\SAMPLE_cConfigureSharepoint.schema.mof" />
     <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\DSCResources\MSFT_xADDomainController\MSFT_xADDomainController.schema.mof" />
