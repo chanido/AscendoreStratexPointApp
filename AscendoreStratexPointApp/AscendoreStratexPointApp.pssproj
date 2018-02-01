@@ -25,11 +25,43 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="FarmDeploymentScript\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="AscendoreStratexPointApp.psd1" />
     <Compile Include="AscendoreStratexPointApp.psm1" />
     <Compile Include="AscendoreStratexPointApp.tests.ps1" />
+    <Compile Include="DeploySharePointFarm.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\availabilitySets.json" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\azuredeploy.json" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\azuredeploy.parameters.json" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\configuringSharepoint.json" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\configuringSQL.json" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\createUiDefinition.json" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\creatingNICS.json" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\creatingPublicIPs.json" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer.ps1.zip" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSqlServer.ps1.zip" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\CreateADPDC.ps1.zip" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\PrepareSharePointServer.ps1.zip" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\PrepareSqlServer.ps1.zip" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\loadBalancers.json" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\mainTemplate.json" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\metadata.json" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\provisioningDomainController.json" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\provisioningSharepoint.json" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\provisioningSQL.json" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\publicip-existing.json" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\publicip-new.json" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\README.md" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\storageAccount.json" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\vnet-new.json" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\vnet-with-dns-server.json" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />
