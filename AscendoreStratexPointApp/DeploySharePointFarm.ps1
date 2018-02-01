@@ -1,13 +1,14 @@
-﻿Login-AzureRmAccount
+﻿###################### For the first time only ######################
+
+Login-AzureRmAccount
 
 Get-AzureRmSubscription
 Set-AzureRmContext -SubscriptionId 'a8e1b1ea-cee1-40f5-8ae9-37a57ff63c4b'
 
-New-AzureRmResourceGroup -Name AscendoreAzureApp -Location 'uksouth'
-
-Get-AzureRmResourceGroup
+###################### For the first time only ######################
 
 ############################ Resource Deployment ############################
+
 $ResourceGroupName = "AscendoreAzureApp";
 
 Remove-AzureRmResourceGroup -Name $ResourceGroupName
@@ -58,5 +59,7 @@ New-AzureRmResourceGroupDeployment @DeploymentParameters;
 Get-AzureRmVM
 Get-AzureRmVMUsage -Location northeurope
 Get-AzureRmVMUsage -Location uksouth
+
+Get-AzureRmResourceGroup
 
 ############################ OTHER TESTS ############################
