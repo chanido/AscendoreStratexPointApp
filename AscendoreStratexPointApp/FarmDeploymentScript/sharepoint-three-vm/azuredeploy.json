@@ -775,56 +775,56 @@
     //    }
     //  }
     //},
-    //{
-    //  "name": "ConfiguringSQLServerVM",
-    //  "type": "Microsoft.Resources/deployments",
-    //  "apiVersion": "2015-01-01",
-    //  "dependsOn": [
-    //    "Microsoft.Resources/deployments/UpdatingDNStoPrimaryADVM"
-    //  ],
-    //  "properties": {
-    //    "mode": "Incremental",
-    //    "templateLink": {
-    //      "uri": "[variables('configuringSQLUrl')]",
-    //      "contentVersion": "1.0.0.0"
-    //    },
-    //    "parameters": {
-    //      "location": {
-    //        "value": "[parameters('location')]"
-    //      },
-    //      "sqlVMName": {
-    //        "value": "[variables('sqlVMName')]"
-    //      },
-    //      "adminUsername": {
-    //        "value": "[parameters('adminUsername')]"
-    //      },
-    //      "adminPassword": {
-    //        "value": "[parameters('adminPassword')]"
-    //      },
-    //      "sqlConfgureModulesURL": {
-    //        "value": "[variables('sqlConfigureModulesURL')]"
-    //      },
-    //      "sqlConfigurationFunction": {
-    //        "value": "[variables('sqlConfigurationFunction')]"
-    //      },
-    //      "domainName": {
-    //        "value": "[parameters('domainName')]"
-    //      },
-    //      "sqlServerServiceAccountUserName": {
-    //        "value": "[parameters('sqlServerServiceAccountUserName')]"
-    //      },
-    //      "sharePointSetupUserAccountUserName": {
-    //        "value": "[parameters('sharePointSetupUserAccountUserName')]"
-    //      },
-    //      "sqlServerServiceAccountPassword": {
-    //        "value": "[parameters('sqlServerServiceAccountPassword')]"
-    //      },
-    //      "sharePointSetupUserAccountPassword": {
-    //        "value": "[parameters('sharePointSetupUserAccountPassword')]"
-    //      }
-    //    }
-    //  }
-    //},
+    {
+      "name": "ConfiguringSQLServerVM",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/UpdatingDNStoPrimaryADVM"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('configuringSQLUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "sqlVMName": {
+            "value": "[variables('sqlVMName')]"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "sqlConfgureModulesURL": {
+            "value": "[variables('sqlConfigureModulesURL')]"
+          },
+          "sqlConfigurationFunction": {
+            "value": "[variables('sqlConfigurationFunction')]"
+          },
+          "domainName": {
+            "value": "[parameters('domainName')]"
+          },
+          "sqlServerServiceAccountUserName": {
+            "value": "[parameters('sqlServerServiceAccountUserName')]"
+          },
+          "sharePointSetupUserAccountUserName": {
+            "value": "[parameters('sharePointSetupUserAccountUserName')]"
+          },
+          "sqlServerServiceAccountPassword": {
+            "value": "[parameters('sqlServerServiceAccountPassword')]"
+          },
+          "sharePointSetupUserAccountPassword": {
+            "value": "[parameters('sharePointSetupUserAccountPassword')]"
+          }
+        }
+      }
+    },
     {
       "name": "ConfiguringSharepointVM",
       "type": "Microsoft.Resources/deployments",

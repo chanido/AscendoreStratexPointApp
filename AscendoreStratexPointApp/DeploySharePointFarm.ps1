@@ -10,20 +10,29 @@ Set-AzureRmContext -SubscriptionId 'a8e1b1ea-cee1-40f5-8ae9-37a57ff63c4b'
 ############################ Resource Deployment ############################
 
 $ResourceGroupName = "AscendoreAzureApp";
+$DeploymentMode = "Incremental"; #"Complete";
 
-Remove-AzureRmResourceGroup -Name $ResourceGroupName
-New-AzureRmResourceGroup -Name $ResourceGroupName -Location 'uksouth'
-
+if ($DeploymentMode -eq "Complete") {
+	write-host "The resource group will be deleted" -foregroundcolor "red";
+	Remove-AzureRmResourceGroup -Name $ResourceGroupName
+	write-host "The resource group has been deleted" -foregroundcolor "red";
+	New-AzureRmResourceGroup -Name $ResourceGroupName -Location 'uksouth'
+	write-host "The resource group has been created" -foregroundcolor "green";
+}
+else {
+	write-host "The deployment is incremental..." -foregroundcolor "green";
+}
 
 if(!$PSScriptRoot -and $MyInvocation.MyCommand.Path){ $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent }
 if(!$PSScriptRoot){ $PSScriptRoot = "C:\GitHub\AscendoreStratexPointApp\AscendoreStratexPointApp\"; }
+	
 
 $Password = "GoodPassword!1";
 
 $DeploymentParameters = @{
 	Name = "AscendoreAppDeployment";
 	ResourceGroup = $ResourceGroupName;
-	Mode = "Complete";
+	Mode = $DeploymentMode;
 	TemplateFile= "$PSScriptRoot\FarmDeploymentScript\sharepoint-three-vm\azuredeploy.json";
 	TemplateParameterObject = @{
 		sharepointFarmName="AscApp16";
@@ -51,7 +60,10 @@ $DeploymentParameters = @{
 		storageAccountType = "Standard_GRS";
 	};
 };
+
+write-host "Starting the deployment" -foregroundcolor "green";
 New-AzureRmResourceGroupDeployment @DeploymentParameters;
+write-host "Deployment finished" -foregroundcolor "blue";
 
 ############################ Resource Deployment ############################
 
