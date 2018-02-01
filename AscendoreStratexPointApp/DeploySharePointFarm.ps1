@@ -8,6 +8,11 @@ New-AzureRmResourceGroup -Name AscendoreAzureApp -Location 'uksouth'
 Get-AzureRmResourceGroup
 
 ############################ Resource Deployment ############################
+$ResourceGroupName = "AscendoreAzureApp";
+
+Remove-AzureRmResourceGroup -Name $ResourceGroupName
+New-AzureRmResourceGroup -Name $ResourceGroupName -Location 'uksouth'
+
 
 if(!$PSScriptRoot -and $MyInvocation.MyCommand.Path){ $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent }
 if(!$PSScriptRoot){ $PSScriptRoot = "C:\GitHub\AscendoreStratexPointApp\AscendoreStratexPointApp\"; }
@@ -16,11 +21,11 @@ $Password = "GoodPassword!1";
 
 $DeploymentParameters = @{
 	Name = "AscendoreAppDeployment";
-	ResourceGroup = "AscendoreAzureApp";
+	ResourceGroup = $ResourceGroupName;
 	Mode = "Complete";
 	TemplateFile= "$PSScriptRoot\FarmDeploymentScript\sharepoint-three-vm\azuredeploy.json";
 	TemplateParameterObject = @{
-		sharepointFarmName="AscAppFarm16";
+		sharepointFarmName="AscApp16";
 		virtualNetworkName="ascendoreappvn";
 		domainName = "ascendore.local";
 		adVMSize = "Standard_DS2_v2";
@@ -39,7 +44,7 @@ $DeploymentParameters = @{
 
 		spDNSPrefix="ascendoreappfarm";
 		spPublicIPNewOrExisting="new";
-		spPublicIPRGName = "ascendoreazureapp";
+		spPublicIPRGName = $ResourceGroupName.ToLower();
 		sppublicIPAddressName = "ascendoreappfarmip";
 		storageAccountNamePrefix = "ascendoreappstorageacc";
 		storageAccountType = "Standard_GRS";
@@ -54,5 +59,4 @@ Get-AzureRmVM
 Get-AzureRmVMUsage -Location northeurope
 Get-AzureRmVMUsage -Location uksouth
 
-Remove-AzureRmResourceGroup -Name "AscendoreAzureApp"
 ############################ OTHER TESTS ############################
