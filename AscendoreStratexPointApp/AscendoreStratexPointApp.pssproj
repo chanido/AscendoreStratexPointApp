@@ -29,12 +29,43 @@
     <Folder Include="FarmDeploymentScript\" />
     <Folder Include="FarmDeploymentScript\sharepoint-three-vm\" />
     <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\cConfigureSharepoint\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\cConfigureSharepoint\DSCResources\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\cConfigureSharepoint\DSCResources\SAMPLE_cConfigureSharepoint\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\DSCResources\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\DSCResources\MSFT_xADDomainController\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\DSCResources\MSFT_xADDomainTrust\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\DSCResources\MSFT_xADDomain\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\DSCResources\MSFT_xADUser\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\DSCResources\MSFT_xWaitForADDomain\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xComputerManagement\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xComputerManagement\DSCResources\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xComputerManagement\DSCResources\MSFT_xComputer\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xCredSSP\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xCredSSP\DSCResources\" />
+    <Folder Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xCredSSP\DSCResources\MSFT_xCredSSP\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AscendoreStratexPointApp.psd1" />
     <Compile Include="AscendoreStratexPointApp.psm1" />
     <Compile Include="AscendoreStratexPointApp.tests.ps1" />
     <Compile Include="DeploySharePointFarm.ps1" />
+    <Compile Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\cConfigureSharepoint\cConfigureSharepoint.psd1" />
+    <Compile Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\cConfigureSharepoint\DSCResources\SAMPLE_cConfigureSharepoint\SAMPLE_cConfigureSharepoint.psm1" />
+    <Compile Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\ConfigureSharePointServer.ps1" />
+    <Compile Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\SharePointServer.psm1" />
+    <Compile Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\DSCResources\MSFT_xADDomainController\MSFT_xADDomainController.psm1" />
+    <Compile Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\DSCResources\MSFT_xADDomainTrust\MSFT_xADDomainTrust.psm1" />
+    <Compile Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\DSCResources\MSFT_xADDomain\MSFT_xADDomain.psm1" />
+    <Compile Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\DSCResources\MSFT_xADUser\MSFT_xADUser.psm1" />
+    <Compile Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\DSCResources\MSFT_xWaitForADDomain\MSFT_xWaitForADDomain.psm1" />
+    <Compile Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\xActiveDirectory.psd1" />
+    <Compile Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xComputerManagement\DSCResources\MSFT_xComputer\MSFT_xComputer.psm1" />
+    <Compile Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xComputerManagement\xComputerManagement.psd1" />
+    <Compile Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xCredSSP\DSCResources\MSFT_xCredSSP\MSFT_xCredSSP.psm1" />
+    <Compile Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xCredSSP\xCredSSP.psd1" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="FarmDeploymentScript\sharepoint-three-vm\availabilitySets.json" />
@@ -45,7 +76,20 @@
     <Content Include="FarmDeploymentScript\sharepoint-three-vm\createUiDefinition.json" />
     <Content Include="FarmDeploymentScript\sharepoint-three-vm\creatingNICS.json" />
     <Content Include="FarmDeploymentScript\sharepoint-three-vm\creatingPublicIPs.json" />
-    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer.ps1.zip" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\Old-ConfigureSharePointServer.ps1.zip" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\cConfigureSharepoint\DSCResources\SAMPLE_cConfigureSharepoint\SAMPLE_cConfigureSharepoint.schema.mof" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\DSCResources\MSFT_xADDomainController\MSFT_xADDomainController.schema.mof" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\DSCResources\MSFT_xADDomainTrust\MSFT_xADDomainTrust.schema.mof" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\DSCResources\MSFT_xADDomain\MSFT_xADDomain.schema.mof" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\DSCResources\MSFT_xADUser\MSFT_xADUser.schema.mof" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\DSCResources\MSFT_xWaitForADDomain\MSFT_xWaitForADDomain.schema.mof" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xActiveDirectory\xActiveDirectory_TechNetDocumentation.html" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xComputerManagement\DSCResources\MSFT_xComputer\MSFT_xComputer.schema.mof" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xComputerManagement\Ms-LPL_2010.docx" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xComputerManagement\xComputerManagement_Documentation.html" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xComputerManagement\_PSGetItemInfo.xml" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xCredSSP\DSCResources\MSFT_xCredSSP\MSFT_xCredSSP.schema.mof" />
+    <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSharePointServer\xCredSSP\xCredSSP_TechNetDocumentation.html" />
     <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\ConfigureSqlServer.ps1.zip" />
     <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\CreateADPDC.ps1.zip" />
     <Content Include="FarmDeploymentScript\sharepoint-three-vm\dsc\PrepareSharePointServer.ps1.zip" />
