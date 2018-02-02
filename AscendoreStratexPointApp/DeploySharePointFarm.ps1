@@ -10,13 +10,13 @@ Set-AzureRmContext -SubscriptionId 'a8e1b1ea-cee1-40f5-8ae9-37a57ff63c4b'
 ############################ Resource Deployment ############################
 
 $ResourceGroupName = "AscendoreAzureApp";
-$DeploymentMode = "Incremental"; #"Complete";
+$DeploymentMode = "Complete"; #"Incremental"; #
 
 if ($DeploymentMode -eq "Complete") {
 	write-host "The resource group will be deleted" -foregroundcolor "red";
-	Remove-AzureRmResourceGroup -Name $ResourceGroupName
+	Remove-AzureRmResourceGroup -Name $ResourceGroupName  -Force;
 	write-host "The resource group has been deleted" -foregroundcolor "red";
-	New-AzureRmResourceGroup -Name $ResourceGroupName -Location 'uksouth'
+	New-AzureRmResourceGroup -Name $ResourceGroupName -Location 'uksouth';
 	write-host "The resource group has been created" -foregroundcolor "green";
 }
 else {
@@ -62,7 +62,7 @@ $DeploymentParameters = @{
 };
 
 write-host "Starting the deployment" -foregroundcolor "green";
-New-AzureRmResourceGroupDeployment @DeploymentParameters;
+New-AzureRmResourceGroupDeployment @DeploymentParameters -Force;
 write-host "Deployment finished" -foregroundcolor "blue";
 
 ############################ Resource Deployment ############################

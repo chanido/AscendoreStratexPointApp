@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "AscendoreStratexPointApp", "AscendoreStratexPointApp\AscendoreStratexPointApp.pssproj", "{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}"
 EndProject
+Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "AscendoreStratexPointResourceGroup", "AscendoreStratexPointResourceGroup\AscendoreStratexPointResourceGroup.deployproj", "{C44208D2-E797-4F66-903F-B4A4F730C195}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C44208D2-E797-4F66-903F-B4A4F730C195}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C44208D2-E797-4F66-903F-B4A4F730C195}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C44208D2-E797-4F66-903F-B4A4F730C195}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C44208D2-E797-4F66-903F-B4A4F730C195}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
