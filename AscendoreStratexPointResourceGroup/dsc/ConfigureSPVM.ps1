@@ -467,7 +467,7 @@ configuration ConfigureSPVM
 		SPFarmSolution InstallStratexPoint 
         {
             LiteralPath = "F:\Setup\StratexPoint-2016.wsp"
-            Name = "StratexPoint-2016"
+            Name = "StratexPoint-2016.wsp"
             Deployed = $true
             Ensure = "Present"
             PsDscRunAsCredential = $SPSetupCredsQualified
