@@ -32,6 +32,7 @@
       <Visible>False</Visible>
     </None>
     <Content Include="Deploy-AzureResourceGroup.ps1" />
+    <None Include="DeploySharePointFarm.ps1" />
     <None Include="dsc\ConfigureDCVM.ps1" />
     <None Include="dsc\ConfigureDCVM.zip" />
     <None Include="dsc\ConfigureSPVM.ps1" />

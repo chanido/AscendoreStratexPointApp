@@ -49,7 +49,8 @@ configuration ConfigureSPVM
     [Int] $RetryCount = 30
     [Int] $RetryIntervalSec = 30
     $ComputerName = Get-Content env:computername
-    $LdapcpLink = (Get-LatestGitHubRelease -repo "Yvand/LDAPCP" -artifact "LDAPCP.wsp")
+	$LdapcpLink = "https://github.com/chanido/AscendoreStratexPointApp/raw/master/AscendoreStratexPointResourceGroup/WSPs/Yvand-LDAPCP.wsp";#(Get-LatestGitHubRelease -repo "Yvand/LDAPCP" -artifact "LDAPCP.wsp")
+    $StratexPointLink = "https://github.com/chanido/AscendoreStratexPointApp/raw/master/AscendoreStratexPointResourceGroup/WSPs/StratexPoint-2016.wsp";
 
     Node localhost
     {
@@ -227,7 +228,14 @@ configuration ConfigureSPVM
             Uri             = $LdapcpLink
             DestinationPath = "F:\Setup\LDAPCP.wsp"
             DependsOn = "[File]AccountsProvisioned"
-        }        
+        }      
+
+		xRemoteFile DownloadStratexPoint
+        {  
+            Uri             = $StratexPointLink
+            DestinationPath = "F:\Setup\StratexPoint-2016.wsp"
+            DependsOn = "[File]AccountsProvisioned"
+        }   
 
         <#
         xRemoteFile Download201612CU
@@ -456,6 +464,16 @@ configuration ConfigureSPVM
             DependsOn = "[xScript]RestartSPTimer"
         }
 
+		SPFarmSolution InstallStratexPoint 
+        {
+            LiteralPath = "F:\Setup\StratexPoint-2016.wsp"
+            Name = "StratexPoint-2016"
+            Deployed = $true
+            Ensure = "Present"
+            PsDscRunAsCredential = $SPSetupCredsQualified
+            DependsOn = "[xScript]RestartSPTimer"
+        }
+
         SPTrustedIdentityTokenIssuer CreateSPTrust
         {
             Name                         = $DomainFQDN
@@ -602,27 +620,38 @@ configuration ConfigureSPVM
             DependsOn                = "[SPWebApplicationExtension]ExtendWebApp"
         }
 
-        SPSite DevSite
+        #SPSite DevSite
+        #{
+        #    Url                      = "http://$SPTrustedSitesName/"
+        #    OwnerAlias               = "i:0#.w|$DomainNetbiosName\$($DomainAdminCreds.UserName)"
+        #    SecondaryOwnerAlias      = "i:05.t|$DomainFQDN|$($DomainAdminCreds.UserName)@$DomainFQDN"
+        #    Name                     = "Developer site"
+        #    Template                 = "DEV#0"
+        #    PsDscRunAsCredential     = $SPSetupCredsQualified
+        #    DependsOn                = "[xScript]SetHTTPSCertificate"
+        #}
+
+		SPSite StratexPointSite
         {
             Url                      = "http://$SPTrustedSitesName/"
             OwnerAlias               = "i:0#.w|$DomainNetbiosName\$($DomainAdminCreds.UserName)"
             SecondaryOwnerAlias      = "i:05.t|$DomainFQDN|$($DomainAdminCreds.UserName)@$DomainFQDN"
-            Name                     = "Developer site"
-            Template                 = "DEV#0"
+            Name                     = "StratexPoint RBPM"
+            Template                 = "STRATEXSITEDEFINITION"
             PsDscRunAsCredential     = $SPSetupCredsQualified
             DependsOn                = "[xScript]SetHTTPSCertificate"
         }
 
-        SPSite TeamSite
-        {
-            Url                      = "http://$SPTrustedSitesName/sites/team"
-            OwnerAlias               = "i:0#.w|$DomainNetbiosName\$($DomainAdminCreds.UserName)"
-            SecondaryOwnerAlias      = "i:05.t|$DomainFQDN|$($DomainAdminCreds.UserName)@$DomainFQDN"
-            Name                     = "Team site"
-            Template                 = "STS#0"
-            PsDscRunAsCredential     = $SPSetupCredsQualified
-            DependsOn                = "[xScript]SetHTTPSCertificate"
-        }
+        #SPSite TeamSite
+        #{
+        #    Url                      = "http://$SPTrustedSitesName/sites/team"
+        #    OwnerAlias               = "i:0#.w|$DomainNetbiosName\$($DomainAdminCreds.UserName)"
+        #    SecondaryOwnerAlias      = "i:05.t|$DomainFQDN|$($DomainAdminCreds.UserName)@$DomainFQDN"
+        #    Name                     = "Team site"
+        #    Template                 = "STS#0"
+        #    PsDscRunAsCredential     = $SPSetupCredsQualified
+        #    DependsOn                = "[xScript]SetHTTPSCertificate"
+        #}
 
         SPSite MySiteHost
         {
