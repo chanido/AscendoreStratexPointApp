@@ -138,6 +138,15 @@
         "description": "Passphrase of the SharePoint farm"
       }
     },
+    "farmVmNamePrefix": {
+      "type": "string",
+      "defaultValue": "STRATEXFARM",
+      "minLength": 1,
+      "maxLength": 11,
+      "metadata": {
+        "description": "The prefix of the name that the virtual machines in the farm will have"
+      }
+    },
     "vmDCSize": {
       "type": "string",
       "defaultValue": "Standard_F4",
@@ -191,12 +200,12 @@
   },
   "variables": {
     "generalSettings": {
-      "storageAccountName": "[concat('storage', uniqueString(resourceGroup().id))]",
-      "vmsStorageAccountContainerName": "vhds",
       "dscScriptsFolder": "dsc",
-      "vmDCName": "DC",
-      "vmSQLName": "SQL",
-      "vmSPName": "SP"
+      "storageAccountName": "[concat('storage', uniqueString(resourceGroup().id))]",
+      "vmDCName": "[concat(parameters('farmVmNamePrefix'), '-DC')]",
+      "vmSPName": "[concat(parameters('farmVmNamePrefix'), '-SP')]",
+      "vmSQLName": "[concat(parameters('farmVmNamePrefix'), '-SQL')]",
+      "vmsStorageAccountContainerName": "vhds"
     },
     "vNetSettings": {
       "vNetPrivateName": "[concat(resourceGroup().name, '-vnet')]",
