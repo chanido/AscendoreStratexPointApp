@@ -660,7 +660,7 @@ configuration ConfigureSPVM
             Name                     = "StratexPoint RBPM"
             Template                 = "STRATEXSITEDEFINITION"
             PsDscRunAsCredential     = $SPSetupCredsQualified
-            DependsOn                = [SPFarmSolution]InstallStratexPoint
+            DependsOn                = "[SPFarmSolution]InstallStratexPoint"
         }
 
         #SPSite TeamSite
