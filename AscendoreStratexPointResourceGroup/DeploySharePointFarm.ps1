@@ -56,15 +56,6 @@ $DeploymentParameters = @{
 		vmSPSize = "Standard_A4_v2";
 		vmsTimeZone = "GMT Standard Time";
 		dnsLabelPrefix="ascendoreappfarm";
-
-
-		#sharepointFarmName="AscApp16";
-		#virtualNetworkName="ascendoreappvn";
-		#spPublicIPNewOrExisting="new";
-		#spPublicIPRGName = $ResourceGroupName.ToLower();
-		#sppublicIPAddressName = "ascendoreappfarmip";
-		#storageAccountNamePrefix = "ascendoreappstorageacc";
-		#storageAccountType = "Standard_GRS";
 	};
 };
 
