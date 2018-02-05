@@ -620,26 +620,26 @@ configuration ConfigureSPVM
             DependsOn = "[xScript]SetHTTPSCertificate"
         }
 
-		xScript RestartSPTimerAfterStratexSolution
-        {
-            SetScript = 
-            {
-                # The deployment of the solution is made in owstimer.exe tends to fail very often, so restart the service before to mitigate this risk
-                Restart-Service SPTimerV4
-            }
-            GetScript =  
-            {
-                # This block must return a hashtable. The hashtable must only contain one key Result and the value must be of type String.
-                return @{ "Result" = "false" }
-            }
-            TestScript = 
-            {
-                # If it returns $false, the SetScript block will run. If it returns $true, the SetScript block will not run.
-               return $false
-            }
-            PsDscRunAsCredential = $DomainAdminCredsQualified
-            DependsOn = "[SPFarmSolution]InstallStratexPoint"
-        }
+		#xScript RestartSPTimerAfterStratexSolution
+  #      {
+  #          SetScript = 
+  #          {
+  #              # The deployment of the solution is made in owstimer.exe tends to fail very often, so restart the service before to mitigate this risk
+  #              Restart-Service SPTimerV4
+  #          }
+  #          GetScript =  
+  #          {
+  #              # This block must return a hashtable. The hashtable must only contain one key Result and the value must be of type String.
+  #              return @{ "Result" = "false" }
+  #          }
+  #          TestScript = 
+  #          {
+  #              # If it returns $false, the SetScript block will run. If it returns $true, the SetScript block will not run.
+  #             return $false
+  #          }
+  #          PsDscRunAsCredential = $DomainAdminCredsQualified
+  #          DependsOn = "[SPFarmSolution]InstallStratexPoint"
+  #      }
 
         #SPSite DevSite
         #{
@@ -660,7 +660,7 @@ configuration ConfigureSPVM
             Name                     = "StratexPoint RBPM"
             Template                 = "STRATEXSITEDEFINITION"
             PsDscRunAsCredential     = $SPSetupCredsQualified
-            DependsOn                = "[xScript]RestartSPTimerAfterStratexSolution"
+            DependsOn                = [SPFarmSolution]InstallStratexPoint; #"[xScript]RestartSPTimerAfterStratexSolution"
         }
 
         #SPSite TeamSite
