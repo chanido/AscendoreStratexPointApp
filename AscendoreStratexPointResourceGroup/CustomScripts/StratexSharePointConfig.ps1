@@ -18,29 +18,53 @@ param
 
 [String] $DomainNetbiosName = (Get-NetBIOSName -DomainFQDN $DomainFQDN)
 
+Write-Host "The StratexSharePointConfig file is being executed. The parameters are: SQLName: $SQLName, DomainFQDN: $DomainFQDN, SqlSvcPassword: ####, SPFarmUserName: $SPFarmUserName";
+Write-Verbose -Message "Verbose: The StratexSharePointConfig file is being executed. The parameters are: SQLName: $SQLName, DomainFQDN: $DomainFQDN, SqlSvcPassword: ####, SPFarmUserName: $SPFarmUserName";
+
 ###################### WE DECLARE THE FUNCTIONS FIRST ######################
+$deploymentsCounter = 0;
 function DeployStratexWSP
 {
-	Install-SPSolution -Identity $SolutionFileName -GACDeployment -AllWebApplications -Force
-	
-	$JobName = "*solution-deployment*$SolutionFileName*"
-	$job = Get-SPTimerJob | ?{ $_.Name -like $JobName }
-	
-	if ($job -eq $null) 
+	$deploymentsCounter++;
+
+	if ($deploymentsCounter -le 3)
 	{
-	  Write-Host Timer job not found for $SolutionFileName
+		Write-Host "Trying to deploy the solution try#$deploymentsCounter";
+
+		try
+		{
+			Install-SPSolution -Identity $SolutionFileName -GACDeployment -AllWebApplications -Force
+			
+			$JobName = "*solution-deployment*$SolutionFileName*"
+			$job = Get-SPTimerJob | ?{ $_.Name -like $JobName }
+			
+			if ($job -eq $null) 
+			{
+			  Write-Host Timer job not found for $SolutionFileName
+			}
+			else
+			{
+			  $JobFullName = $job.Name
+			  Write-Host -NoNewLine Waiting to finish job $JobFullName
+			  
+			  while ((Get-SPTimerJob $JobFullName) -ne $null) 
+			  {
+			    Write-Host -NoNewLine .
+			    Start-Sleep -Seconds 2
+			  }
+			  Write-Host Finished
+			}
+		}
+		catch 
+		{
+			Write-Verbose -Message '$SolutionFileName deployment failed, we will try to do it again'
+			Write-Verbose -Message $_.Exception.Message
+			DeployStratexWSP;
+		}
 	}
 	else
 	{
-	  $JobFullName = $job.Name
-	  Write-Host -NoNewLine Waiting to finish job $JobFullName
-	  
-	  while ((Get-SPTimerJob $JobFullName) -ne $null) 
-	  {
-	    Write-Host -NoNewLine .
-	    Start-Sleep -Seconds 2
-	  }
-	  Write-Host Finished
+		Write-Verbose -Message 'Maximum number of retries reached trying to deploy the $SolutionFileName';
 	}
 }
 

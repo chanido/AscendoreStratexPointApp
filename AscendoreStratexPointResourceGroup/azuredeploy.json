@@ -646,7 +646,7 @@
           "location": "[resourceGroup().location]",
           "apiVersion": "2016-03-30",
           "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmSQLName)]"
+            "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('generalSettings').vmSQLName,'/ConfigureSQLVM'))]"
           ],
           "tags": {
             "displayName": "StratexSQLConfig"
@@ -844,7 +844,7 @@
           "location": "[resourceGroup().location]",
           "apiVersion": "2016-03-30",
           "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmSPName)]"
+            "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('generalSettings').vmSPName,'/ConfigureSPVM'))]"
           ],
           "tags": {
             "displayName": "StratexSharePointConfig"

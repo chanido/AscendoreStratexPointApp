@@ -7,6 +7,9 @@ param
     [SecureString]$SqlSvcPassword
 )
 
+Write-Host "The StratexSQLConfig file is being executed. The parameters are: ComputerName: $ComputerName, SqlSvcPassword: ####";
+Write-Verbose -Message "The StratexSQLConfig file is being executed. The parameters are: ComputerName: $ComputerName, SqlSvcPassword: ####";
+
 [System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMO') | out-null
 # Connect to the instance using SMO
 $s = new-object ('Microsoft.SqlServer.Management.Smo.Server') $ComputerName
