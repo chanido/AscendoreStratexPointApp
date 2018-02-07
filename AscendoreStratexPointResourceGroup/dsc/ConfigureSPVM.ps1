@@ -620,16 +620,6 @@ configuration ConfigureSPVM
             DependsOn = "[xScript]SetHTTPSCertificate"
         }
 
-		SPFarmSolution InstallStratexPoint2 
-        {
-            LiteralPath = "F:\Setup\StratexPoint-2016.wsp"
-            Name = "StratexPoint-2016.wsp"
-            Deployed = $true
-            Ensure = "Present"
-            PsDscRunAsCredential = $SPSetupCredsQualified
-            DependsOn = "[SPFarmSolution]InstallStratexPoint"
-        }
-
         #SPSite DevSite
         #{
         #    Url                      = "http://$SPTrustedSitesName/"

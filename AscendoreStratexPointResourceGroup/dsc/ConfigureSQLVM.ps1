@@ -141,33 +141,33 @@ configuration ConfigureSQLVM
             DependsOn = "[xComputer]DomainJoin"
         }
 
-		xSQLServerLogin AddStratexDBUpdater
-        {
-            Ensure = 'Present'
-            Name = $StratexDBUpdater.UserName
-            LoginType = 'SqlLogin'
-            SQLServer = $ComputerName
-            SQLInstanceName = 'DSC'
-            LoginCredential = $StratexDBUpdater
-            LoginMustChangePassword = $false
-            LoginPasswordExpirationEnabled = $true
-            LoginPasswordPolicyEnforced = $true
-			DependsOn = "[xComputer]DomainJoin"
-        }
+		#xSQLServerLogin AddStratexDBUpdater
+  #      {
+  #          Ensure = 'Present'
+  #          Name = $StratexDBUpdater.UserName
+  #          LoginType = 'SqlLogin'
+  #          SQLServer = $ComputerName
+  #          SQLInstanceName = 'DSC'
+  #          LoginCredential = $StratexDBUpdater
+  #          LoginMustChangePassword = $false
+  #          LoginPasswordExpirationEnabled = $true
+  #          LoginPasswordPolicyEnforced = $true
+		#	DependsOn = "[xComputer]DomainJoin"
+  #      }
 
-		xSQLServerLogin AddStratexDBOwner
-        {
-            Ensure = 'Present'
-            Name = $StratexDBOwner.UserName
-            LoginType = 'SqlLogin'
-            SQLServer = $ComputerName
-            SQLInstanceName = 'DSC'
-            LoginCredential = $StratexDBOwner
-            LoginMustChangePassword = $false
-            LoginPasswordExpirationEnabled = $true
-            LoginPasswordPolicyEnforced = $true
-			DependsOn = "[xComputer]DomainJoin"
-        }
+		#xSQLServerLogin AddStratexDBOwner
+  #      {
+  #          Ensure = 'Present'
+  #          Name = $StratexDBOwner.UserName
+  #          LoginType = 'SqlLogin'
+  #          SQLServer = $ComputerName
+  #          SQLInstanceName = 'DSC'
+  #          LoginCredential = $StratexDBOwner
+  #          LoginMustChangePassword = $false
+  #          LoginPasswordExpirationEnabled = $true
+  #          LoginPasswordPolicyEnforced = $true
+		#	DependsOn = "[xComputer]DomainJoin"
+  #      }
 		
 
         xSQLServerLogin AddSPSetupLogin
