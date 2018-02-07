@@ -325,34 +325,3 @@ function Get-NetBIOSName
         }
     }
 } 
-
-<#
-# Azure DSC extension logging: C:\WindowsAzure\Logs\Plugins\Microsoft.Powershell.DSC\2.21.0.0
-# Azure DSC extension configuration: C:\Packages\Plugins\Microsoft.Powershell.DSC\2.21.0.0\DSCWork
-
-Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-Install-Module -Name xAdcsDeployment
-Install-Module -Name xCertificate
-Install-Module -Name xPSDesiredStateConfiguration
-Install-Module -Name xCredSSP
-Install-Module -Name xWebAdministration
-Install-Module -Name xDisk
-Install-Module -Name xNetworking
-
-help ConfigureDCVM
-
-$Admincreds = Get-Credential -Credential "yvand"
-$AdfsSvcCreds = Get-Credential -Credential "adfssvc"
-$DomainFQDN = "contoso.local"
-$PrivateIP = "10.0.1.4"
-
-ConfigureDCVM -Admincreds $Admincreds -AdfsSvcCreds $AdfsSvcCreds -DomainFQDN $DomainFQDN -PrivateIP $PrivateIP -ConfigurationData @{AllNodes=@(@{ NodeName="localhost"; PSDscAllowPlainTextPassword=$true })} -OutputPath "C:\Data\\output"
-Set-DscLocalConfigurationManager -Path "C:\Data\output\"
-Start-DscConfiguration -Path "C:\Data\output" -Wait -Verbose -Force
-
-https://github.com/PowerShell/xActiveDirectory/issues/27
-Uninstall-WindowsFeature "ADFS-Federation"
-https://msdn.microsoft.com/library/mt238290.aspx
-\\.\pipe\MSSQL$MICROSOFT##SSEE\sql\query
-#>
