@@ -646,7 +646,7 @@
           "location": "[resourceGroup().location]",
           "apiVersion": "2016-03-30",
           "dependsOn": [
-            "Microsoft.Compute/virtualMachines/extensions/DSCConfigureSQLVM"
+            "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'DSCConfigureSQLVM')]"
           ],
           "tags": {
             "displayName": "StratexSQLConfig"
