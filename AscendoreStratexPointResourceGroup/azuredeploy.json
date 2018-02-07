@@ -589,7 +589,7 @@
       },
       "resources": [
         {
-          "name": "[concat(variables('generalSettings').vmSQLName,'/ConfigureSQLVM')]",
+          "name": "DSCConfigureSQLVM",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "location": "[resourceGroup().location]",
           "apiVersion": "2015-06-15",
@@ -646,7 +646,7 @@
           "location": "[resourceGroup().location]",
           "apiVersion": "2016-03-30",
           "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('generalSettings').vmSQLName,'/ConfigureSQLVM'))]"
+            "Microsoft.Compute/virtualMachines/extensions/DSCConfigureSQLVM"
           ],
           "tags": {
             "displayName": "StratexSQLConfig"
@@ -773,7 +773,7 @@
       },
       "resources": [
         {
-          "name": "[concat(variables('generalSettings').vmSPName,'/ConfigureSPVM')]",
+          "name": "DSCConfigureSPVM",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "location": "[resourceGroup().location]",
           "apiVersion": "2015-06-15",
@@ -844,7 +844,7 @@
           "location": "[resourceGroup().location]",
           "apiVersion": "2016-03-30",
           "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('generalSettings').vmSPName,'/ConfigureSPVM'))]"
+            "Microsoft.Compute/virtualMachines/extensions/DSCConfigureSPVM]"
           ],
           "tags": {
             "displayName": "StratexSharePointConfig"
