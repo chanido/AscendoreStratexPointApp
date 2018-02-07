@@ -180,15 +180,15 @@ configuration ConfigureSQLVM
             DependsOn = "[xADUser]CreateSPSetupAccount"
         }
 
-        xSQLServerRole GrantSQLRoleSysadmin
-        {
-            ServerRoleName = "sysadmin"
-            MembersToInclude = "${DomainNetbiosName}\$($DomainAdminCreds.UserName), $($StratexDBOwner.UserName)" ##WatchOut
-            Ensure = "Present"
-            SQLServer = $ComputerName
-            SQLInstanceName = "MSSQLSERVER"
-            DependsOn = "[xSQLServerLogin]AddDomainAdminLogin"
-        }
+        #xSQLServerRole GrantSQLRoleSysadmin
+        #{
+        #    ServerRoleName = "sysadmin"
+        #    MembersToInclude = "${DomainNetbiosName}\$($DomainAdminCreds.UserName), $($StratexDBOwner.UserName)" ##WatchOut
+        #    Ensure = "Present"
+        #    SQLServer = $ComputerName
+        #    SQLInstanceName = "MSSQLSERVER"
+        #    DependsOn = "[xSQLServerLogin]AddDomainAdminLogin"
+        #}
 
         xSQLServerRole GrantSQLRoleSecurityAdmin
         {
