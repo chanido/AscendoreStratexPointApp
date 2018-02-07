@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>c44208d2-e797-4f66-903f-b4a4f730c195</ProjectGuid>
+    <ProjectGuid>1b7addb3-71d5-490f-ba8c-eff259fa66f2</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup>
     <TargetFrameworkIdentifier>Deployment</TargetFrameworkIdentifier>
@@ -25,26 +25,20 @@
   <Import Condition=" Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Deployment\1.1\DeploymentProject.targets') " Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Deployment\1.1\DeploymentProject.targets" />
   <!-- vertag<:>end -->
   <ItemGroup>
-    <Content Include="azuredeploy.json" />
     <Content Include="azuredeploy.parameters.json" />
-    <None Include="CHANGELOG.md" />
-    <Content Include="CustomScripts\StratexSQLConfig.ps1" />
-    <Content Include="CustomScripts\StratexSharePointConfig.ps1" />
+    <Content Include="azuredeploy.json" />
+    <Content Include="CHANGELOG.md" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
     <Content Include="Deploy-AzureResourceGroup.ps1" />
-    <None Include="DeploySharePointFarm.ps1" />
-    <None Include="dsc\ConfigureDCVM.ps1" />
-    <None Include="dsc\ConfigureDCVM.zip" />
-    <None Include="dsc\ConfigureSPVM.ps1" />
-    <None Include="dsc\ConfigureSPVM.zip" />
-    <None Include="dsc\ConfigureSQLVM.ps1" />
-    <None Include="dsc\ConfigureSQLVM.zip" />
-    <None Include="metadata.json" />
-    <None Include="README.md" />
-    <None Include="WSPs\StratexPoint-2016.wsp" />
-    <None Include="WSPs\Yvand-LDAPCP.wsp" />
+    <Content Include="dsc\ConfigureSQLVM.ps1" />
+    <Content Include="dsc\ConfigureSQLVM.zip" />
+    <Content Include="dsc\ConfigureSPVM.ps1" />
+    <Content Include="dsc\ConfigureSPVM.zip" />
+    <Content Include="dsc\ConfigureDCVM.zip" />
+    <Content Include="dsc\ConfigureDCVM.ps1" />
+    <Content Include="README.md" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
 </Project>

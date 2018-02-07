@@ -30,9 +30,6 @@ configuration ConfigureSQLVM
     [PSCredential] $DomainCreds = New-Object PSCredential ("${DomainNetbiosName}\$($DomainAdminCreds.UserName)", $DomainAdminCreds.Password)
     [PSCredential] $SPSCreds = New-Object PSCredential ("${DomainNetbiosName}\$($SPSetupCreds.UserName)", $SPSetupCreds.Password)
     [PSCredential] $SQLCreds = New-Object PSCredential ("${DomainNetbiosName}\$($SqlSvcCreds.UserName)", $SqlSvcCreds.Password)
-	### StratexCredentials ###
-	[PSCredential] $StratexDBOwner = New-Object PSCredential ("StratexDBOwner", $SqlSvcCreds.Password)
-	[PSCredential] $StratexDBUpdater = New-Object PSCredential ("StratexDBUpdater", $SqlSvcCreds.Password)
     $ComputerName = Get-Content env:computername
 
     Node localhost
@@ -141,35 +138,6 @@ configuration ConfigureSQLVM
             DependsOn = "[xComputer]DomainJoin"
         }
 
-		xSQLServerLogin AddStratexDBUpdater
-        {
-            Ensure = 'Present'
-            Name = $StratexDBUpdater.UserName
-            LoginType = 'SqlLogin'
-            SQLServer = $ComputerName
-            SQLInstanceName = 'DSC'
-            LoginCredential = $StratexDBUpdater
-            LoginMustChangePassword = $false
-            LoginPasswordExpirationEnabled = $true
-            LoginPasswordPolicyEnforced = $true
-			DependsOn = "[xComputer]DomainJoin"
-        }
-
-		xSQLServerLogin AddStratexDBOwner
-        {
-            Ensure = 'Present'
-            Name = $StratexDBOwner.UserName
-            LoginType = 'SqlLogin'
-            SQLServer = $ComputerName
-            SQLInstanceName = 'DSC'
-            LoginCredential = $StratexDBOwner
-            LoginMustChangePassword = $false
-            LoginPasswordExpirationEnabled = $true
-            LoginPasswordPolicyEnforced = $true
-			DependsOn = "[xComputer]DomainJoin"
-        }
-		
-
         xSQLServerLogin AddSPSetupLogin
         {
             Name = "${DomainNetbiosName}\$($SPSetupCreds.UserName)"
@@ -183,7 +151,7 @@ configuration ConfigureSQLVM
         xSQLServerRole GrantSQLRoleSysadmin
         {
             ServerRoleName = "sysadmin"
-            MembersToInclude = "${DomainNetbiosName}\$($DomainAdminCreds.UserName), $($StratexDBOwner.UserName)" ##WatchOut
+            MembersToInclude = "${DomainNetbiosName}\$($DomainAdminCreds.UserName)"
             Ensure = "Present"
             SQLServer = $ComputerName
             SQLInstanceName = "MSSQLSERVER"
@@ -229,31 +197,6 @@ configuration ConfigureSQLVM
         #>
     }
 }
-function ConfigureSQLServerForSQLAuth
-{
-	Start-Sleep -Seconds 60
-
-	[System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMO') | out-null
-	# Connect to the instance using SMO
-	$s = new-object ('Microsoft.SqlServer.Management.Smo.Server') $ComputerName
-	[string]$nm = $s.Name
-	[string]$mode = $s.Settings.LoginMode
-	
-	write-output "Instance Name: $nm"
-	write-output "Login Mode: $mode"
-	
-	$s.Settings.LoginMode = [Microsoft.SqlServer.Management.SMO.ServerLoginMode]::Mixed
-	
-	# Make the changes
-	$s.Alter()
-	
-	# Change the password for the sa Account
-	$s.Logins.Item('sa').ChangePassword($StratexDBOwner.Password)
-	$s.Logins.Item('sa').Alter()
-	
-	restart-service -Force 'MSSQLSERVER'
-}
-
 function Get-NetBIOSName
 {
     [OutputType([string])]

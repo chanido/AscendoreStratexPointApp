@@ -138,15 +138,6 @@
         "description": "Passphrase of the SharePoint farm"
       }
     },
-    "farmVmNamePrefix": {
-      "type": "string",
-      "defaultValue": "STRATEXFARM",
-      "minLength": 1,
-      "maxLength": 11,
-      "metadata": {
-        "description": "The prefix of the name that the virtual machines in the farm will have"
-      }
-    },
     "vmDCSize": {
       "type": "string",
       "defaultValue": "Standard_F4",
@@ -188,7 +179,7 @@
       "metadata": {
         "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
       },
-      "defaultValue": "https://raw.githubusercontent.com/chanido/AscendoreStratexPointApp/master/AscendoreStratexPointResourceGroup/"
+      "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/sharepoint-adfs/"
     },
     "_artifactsLocationSasToken": {
       "type": "securestring",
@@ -200,12 +191,12 @@
   },
   "variables": {
     "generalSettings": {
-      "dscScriptsFolder": "dsc",
       "storageAccountName": "[concat('storage', uniqueString(resourceGroup().id))]",
-      "vmDCName": "[concat(parameters('farmVmNamePrefix'), '-DC')]",
-      "vmSPName": "[concat(parameters('farmVmNamePrefix'), '-SP')]",
-      "vmSQLName": "[concat(parameters('farmVmNamePrefix'), '-SQL')]",
-      "vmsStorageAccountContainerName": "vhds"
+      "vmsStorageAccountContainerName": "vhds",
+      "dscScriptsFolder": "dsc",
+      "vmDCName": "DC",
+      "vmSQLName": "SQL",
+      "vmSPName": "SP"
     },
     "vNetSettings": {
       "vNetPrivateName": "[concat(resourceGroup().name, '-vnet')]",
@@ -268,13 +259,7 @@
       "script": "ConfigureSPVM.ps1",
       "function": "ConfigureSPVM",
       "forceUpdateTag": "1.0"
-    },
-    "TestDSCArchiveFolder": "DSC",
-    "TestDSCArchiveFileName": "TestDSC.zip",
-    "StratexSQLConfigScriptFolder": "CustomScripts",
-    "StratexSQLConfigScriptFileName": "StratexSQLConfig.ps1",
-    "StratexSharePointConfigScriptFolder": "CustomScripts",
-    "StratexSharePointConfigScriptFileName": "StratexSharePointConfig.ps1"
+    }
   },
   "resources": [
     {
@@ -284,7 +269,7 @@
       "apiVersion": "2015-06-15",
       "dependsOn": [],
       "tags": {
-        "displayName": "StratexPointFarmStorageAccount"
+        "displayName": "[variables('generalSettings').storageAccountName]"
       },
       "properties": {
         "accountType": "[parameters('storageAccountType')]"
@@ -297,7 +282,7 @@
       "apiVersion": "2015-06-15",
       "dependsOn": [],
       "tags": {
-        "displayName": "StratexPointFarmVNetwork"
+        "displayName": "[variables('vNetSettings').vNetPrivateName]"
       },
       "properties": {
         "addressSpace": {
@@ -334,7 +319,7 @@
       "apiVersion": "2015-06-15",
       "dependsOn": [],
       "tags": {
-        "displayName": "DomainControllerIP"
+        "displayName": "[variables('vmDC').vmPublicIPName]"
       },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
@@ -353,7 +338,7 @@
         "[resourceId('Microsoft.Network/publicIPAddresses', variables('vmDC').vmPublicIPName)]"
       ],
       "tags": {
-        "displayName": "DomainControllerNwInterface"
+        "displayName": "[variables('vmDC').vmNicName]"
       },
       "properties": {
         "ipConfigurations": [
@@ -383,7 +368,7 @@
         "[resourceId('Microsoft.Network/networkInterfaces', variables('vmDC').vmNicName)]"
       ],
       "tags": {
-        "displayName": "DomainControllerVM"
+        "displayName": "[variables('generalSettings').vmDCName]"
       },
       "properties": {
         "hardwareProfile": {
@@ -489,7 +474,7 @@
       "apiVersion": "2015-06-15",
       "dependsOn": [],
       "tags": {
-        "displayName": "SQLServerIP"
+        "displayName": "[variables('vmSQL').vmPublicIPName]"
       },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
@@ -508,7 +493,7 @@
         "[resourceId('Microsoft.Network/publicIPAddresses', variables('vmSQL').vmPublicIPName)]"
       ],
       "tags": {
-        "displayName": "SQLServerNwInterface"
+        "displayName": "[variables('vmSQL').vmNicName]"
       },
       "properties": {
         "ipConfigurations": [
@@ -537,7 +522,7 @@
         "[resourceId('Microsoft.Network/networkInterfaces', variables('vmSQL').vmNicName)]"
       ],
       "tags": {
-        "displayName": "SQLServerVM"
+        "displayName": "[variables('generalSettings').vmSQLName]"
       },
       "properties": {
         "hardwareProfile": {
@@ -588,82 +573,7 @@
         }
       },
       "resources": [
-        {
-          "name": "[concat(variables('generalSettings').vmSQLName,'/ConfigureSQLVM')]",
-          "type": "Microsoft.Compute/virtualMachines/extensions",
-          "location": "[resourceGroup().location]",
-          "apiVersion": "2015-06-15",
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmDCName)]",
-            "[concat('Microsoft.Compute/virtualMachines/', variables('generalSettings').vmDCName, '/extensions/ConfigureDCVM')]",
-            "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmSQLName)]"
-          ],
-          "tags": {
-            "displayName": "ConfigureSQLVM"
-          },
-          "properties": {
-            "publisher": "Microsoft.Powershell",
-            "type": "DSC",
-            "typeHandlerVersion": "2.9",
-            "autoUpgradeMinorVersion": true,
-            "forceUpdateTag": "[variables('dscConfigureSQLVM').forceUpdateTag]",
-            "settings": {
-              "wmfVersion": "latest",
-              "configuration": {
-                "url": "[concat(parameters('_artifactsLocation'), '/', variables('generalSettings').dscScriptsFolder, '/', variables('dscConfigureSQLVM').fileName, parameters('_artifactsLocationSasToken'))]",
-                "script": "[variables('dscConfigureSQLVM').script]",
-                "function": "[variables('dscConfigureSQLVM').function]"
-              },
-              "configurationArguments": {
-                "DNSServer": "[variables('vmDC').nicPrivateIPAddress]",
-                "DomainFQDN": "[parameters('domainFQDN')]"
-              },
-              "privacy": {
-                "dataCollection": "enable"
-              }
-            },
-            "protectedSettings": {
-              "configurationArguments": {
-                "DomainAdminCreds": {
-                  "UserName": "[parameters('adminUsername')]",
-                  "Password": "[parameters('adminPassword')]"
-                },
-                "SqlSvcCreds": {
-                  "UserName": "[parameters('sqlSvcUserName')]",
-                  "Password": "[parameters('sqlSvcPassword')]"
-                },
-                "SPSetupCreds": {
-                  "UserName": "[parameters('spSetupUserName')]",
-                  "Password": "[parameters('spSetupPassword')]"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "StratexSQLConfig",
-          "type": "extensions",
-          "location": "[resourceGroup().location]",
-          "apiVersion": "2016-03-30",
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmSQLName)]"
-          ],
-          "tags": {
-            "displayName": "StratexSQLConfig"
-          },
-          "properties": {
-            "publisher": "Microsoft.Compute",
-            "type": "CustomScriptExtension",
-            "typeHandlerVersion": "1.4",
-            "autoUpgradeMinorVersion": true,
-            "settings": {
-              "fileUris": [
-                "[concat(parameters('_artifactsLocation'), '/', variables('StratexSQLConfigScriptFolder'), '/', variables('StratexSQLConfigScriptFileName'), parameters('_artifactsLocationSasToken'))]"
-              ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('StratexSQLConfigScriptFolder'), '/', variables('StratexSQLConfigScriptFileName'), ' -ComputerName ', variables('generalSettings').vmSQLName, ' -SqlSvcPassword ', parameters('sqlSvcPassword'))]"
-            }
-          }
-        }
+
       ]
     },
     {
@@ -673,7 +583,7 @@
       "apiVersion": "2015-06-15",
       "dependsOn": [],
       "tags": {
-        "displayName": "SharePointIP"
+        "displayName": "[variables('vmSP').vmPublicIPName]"
       },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
@@ -692,7 +602,7 @@
         "[resourceId('Microsoft.Network/publicIPAddresses', variables('vmSP').vmPublicIPName)]"
       ],
       "tags": {
-        "displayName": "SharePointNwInterface"
+        "displayName": "[variables('vmSP').vmNicName]"
       },
       "properties": {
         "ipConfigurations": [
@@ -721,7 +631,7 @@
         "[resourceId('Microsoft.Network/networkInterfaces', variables('vmSP').vmNicName)]"
       ],
       "tags": {
-        "displayName": "SharePointVM"
+        "displayName": "[variables('generalSettings').vmSPName]"
       },
       "properties": {
         "hardwareProfile": {
@@ -772,97 +682,125 @@
         }
       },
       "resources": [
-        {
-          "name": "[concat(variables('generalSettings').vmSPName,'/ConfigureSPVM')]",
-          "type": "Microsoft.Compute/virtualMachines/extensions",
-          "location": "[resourceGroup().location]",
-          "apiVersion": "2015-06-15",
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmDCName)]",
-            "[concat('Microsoft.Compute/virtualMachines/', variables('generalSettings').vmDCName, '/extensions/ConfigureDCVM')]",
-            "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmSPName)]"
-          ],
-          "tags": {
-            "displayName": "ConfigureSPVM"
+      ]
+    },
+    {
+      "name": "[concat(variables('generalSettings').vmSQLName,'/ConfigureSQLVM')]",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmDCName)]",
+        "[concat('Microsoft.Compute/virtualMachines/', variables('generalSettings').vmDCName, '/extensions/ConfigureDCVM')]",
+        "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmSQLName)]"
+      ],
+      "tags": {
+        "displayName": "[concat(variables('generalSettings').vmSQLName,'/ConfigureSQLVM')]"
+      },
+      "properties": {
+        "publisher": "Microsoft.Powershell",
+        "type": "DSC",
+        "typeHandlerVersion": "2.9",
+        "autoUpgradeMinorVersion": true,
+        "forceUpdateTag": "[variables('dscConfigureSQLVM').forceUpdateTag]",
+        "settings": {
+          "wmfVersion": "latest",
+          "configuration": {
+            "url": "[concat(parameters('_artifactsLocation'), '/', variables('generalSettings').dscScriptsFolder, '/', variables('dscConfigureSQLVM').fileName, parameters('_artifactsLocationSasToken'))]",
+            "script": "[variables('dscConfigureSQLVM').script]",
+            "function": "[variables('dscConfigureSQLVM').function]"
           },
-          "properties": {
-            "publisher": "Microsoft.Powershell",
-            "type": "DSC",
-            "typeHandlerVersion": "2.9",
-            "autoUpgradeMinorVersion": true,
-            "forceUpdateTag": "[variables('dscConfigureSPVM').forceUpdateTag]",
-            "settings": {
-              "wmfVersion": "latest",
-              "configuration": {
-                "url": "[concat(parameters('_artifactsLocation'), '/', variables('generalSettings').dscScriptsFolder, '/', variables('dscConfigureSPVM').fileName, parameters('_artifactsLocationSasToken'))]",
-                "script": "[variables('dscConfigureSPVM').script]",
-                "function": "[variables('dscConfigureSPVM').function]"
-              },
-              "configurationArguments": {
-                "DNSServer": "[variables('vmDC').nicPrivateIPAddress]",
-                "DomainFQDN": "[parameters('domainFQDN')]",
-                "DCName": "[variables('generalSettings').vmDCName]",
-                "SQLName": "[variables('generalSettings').vmSQLName]"
-              },
-              "privacy": {
-                "dataCollection": "enable"
-              }
-            },
-            "protectedSettings": {
-              "configurationArguments": {
-                "DomainAdminCreds": {
-                  "UserName": "[parameters('adminUsername')]",
-                  "Password": "[parameters('adminPassword')]"
-                },
-                "SPSetupCreds": {
-                  "UserName": "[parameters('spSetupUserName')]",
-                  "Password": "[parameters('spSetupPassword')]"
-                },
-                "SPFarmCreds": {
-                  "UserName": "[parameters('spFarmUserName')]",
-                  "Password": "[parameters('spFarmPassword')]"
-                },
-                "SPSvcCreds": {
-                  "UserName": "[parameters('spSvcUserName')]",
-                  "Password": "[parameters('spSvcPassword')]"
-                },
-                "SPAppPoolCreds": {
-                  "UserName": "[parameters('spAppPoolUserName')]",
-                  "Password": "[parameters('spAppPoolPassword')]"
-                },
-                "SPPassphraseCreds": {
-                  "UserName": "Passphrase",
-                  "Password": "[parameters('spPassphrase')]"
-                }
-              }
-            }
+          "configurationArguments": {
+            "DNSServer": "[variables('vmDC').nicPrivateIPAddress]",
+            "DomainFQDN": "[parameters('domainFQDN')]"
+          },
+          "privacy": {
+            "dataCollection": "enable"
           }
         },
-        {
-          "name": "StratexSharePointConfig",
-          "type": "extensions",
-          "location": "[resourceGroup().location]",
-          "apiVersion": "2016-03-30",
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmSPName)]"
-          ],
-          "tags": {
-            "displayName": "StratexSharePointConfig"
-          },
-          "properties": {
-            "publisher": "Microsoft.Compute",
-            "type": "CustomScriptExtension",
-            "typeHandlerVersion": "1.4",
-            "autoUpgradeMinorVersion": true,
-            "settings": {
-              "fileUris": [
-                "[concat(parameters('_artifactsLocation'), '/', variables('StratexSharePointConfigScriptFolder'), '/', variables('StratexSharePointConfigScriptFileName'), parameters('_artifactsLocationSasToken'))]"
-              ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('StratexSharePointConfigScriptFolder'), '/', variables('StratexSharePointConfigScriptFileName'), ' -SQLName ', variables('generalSettings').vmSQLName, ' -DomainFQDN ', parameters('domainFQDN'), ' -SqlSvcPassword ',  parameters('sqlSvcPassword'), ' -SPFarmUserName ', parameters('spFarmUserName'))]"
+        "protectedSettings": {
+          "configurationArguments": {
+            "DomainAdminCreds": {
+              "UserName": "[parameters('adminUsername')]",
+              "Password": "[parameters('adminPassword')]"
+            },
+            "SqlSvcCreds": {
+              "UserName": "[parameters('sqlSvcUserName')]",
+              "Password": "[parameters('sqlSvcPassword')]"
+            },
+            "SPSetupCreds": {
+              "UserName": "[parameters('spSetupUserName')]",
+              "Password": "[parameters('spSetupPassword')]"
             }
           }
         }
-      ]
+      }
+    },
+    {
+      "name": "[concat(variables('generalSettings').vmSPName,'/ConfigureSPVM')]",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmDCName)]",
+        "[concat('Microsoft.Compute/virtualMachines/', variables('generalSettings').vmDCName, '/extensions/ConfigureDCVM')]",
+        "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmSPName)]"
+      ],
+      "tags": {
+        "displayName": "[concat(variables('generalSettings').vmSPName,'/ConfigureSPVM')]"
+      },
+      "properties": {
+        "publisher": "Microsoft.Powershell",
+        "type": "DSC",
+        "typeHandlerVersion": "2.9",
+        "autoUpgradeMinorVersion": true,
+        "forceUpdateTag": "[variables('dscConfigureSPVM').forceUpdateTag]",
+        "settings": {
+          "wmfVersion": "latest",
+          "configuration": {
+            "url": "[concat(parameters('_artifactsLocation'), '/', variables('generalSettings').dscScriptsFolder, '/', variables('dscConfigureSPVM').fileName, parameters('_artifactsLocationSasToken'))]",
+            "script": "[variables('dscConfigureSPVM').script]",
+            "function": "[variables('dscConfigureSPVM').function]"
+          },
+          "configurationArguments": {
+            "DNSServer": "[variables('vmDC').nicPrivateIPAddress]",
+            "DomainFQDN": "[parameters('domainFQDN')]",
+            "DCName": "[variables('generalSettings').vmDCName]",
+            "SQLName": "[variables('generalSettings').vmSQLName]"
+          },
+          "privacy": {
+            "dataCollection": "enable"
+          }
+        },
+        "protectedSettings": {
+          "configurationArguments": {
+            "DomainAdminCreds": {
+              "UserName": "[parameters('adminUsername')]",
+              "Password": "[parameters('adminPassword')]"
+            },
+            "SPSetupCreds": {
+              "UserName": "[parameters('spSetupUserName')]",
+              "Password": "[parameters('spSetupPassword')]"
+            },
+            "SPFarmCreds": {
+              "UserName": "[parameters('spFarmUserName')]",
+              "Password": "[parameters('spFarmPassword')]"
+            },
+            "SPSvcCreds": {
+              "UserName": "[parameters('spSvcUserName')]",
+              "Password": "[parameters('spSvcPassword')]"
+            },
+            "SPAppPoolCreds": {
+              "UserName": "[parameters('spAppPoolUserName')]",
+              "Password": "[parameters('spAppPoolPassword')]"
+            },
+            "SPPassphraseCreds": {
+              "UserName": "Passphrase",
+              "Password": "[parameters('spPassphrase')]"
+            }
+          }
+        }
+      }
     }
   ],
   "outputs": {
