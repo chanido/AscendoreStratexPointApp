@@ -4,7 +4,7 @@ param
     [String]$ComputerName,
 
 	[Parameter(Mandatory)]
-    [SecureString]$SqlSvcPassword
+    [String]$SqlSvcPassword
 )
 
 Write-Host "The StratexSQLConfig file is being executed. The parameters are: ComputerName: $ComputerName, SqlSvcPassword: ####";
