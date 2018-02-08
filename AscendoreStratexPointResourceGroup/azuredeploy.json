@@ -528,7 +528,7 @@
       }
     },
     {
-      "name": "SQLServerVM",
+      "name": "[variables('generalSettings').vmSQLName]",
       "type": "Microsoft.Compute/virtualMachines",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
@@ -589,14 +589,14 @@
       },
       "resources": [
         {
-          "name": "SQLServerVM/DSCConfigureSQLVM",
+          "name": "[concat(variables('generalSettings').vmSQLName, '/DSCConfigureSQLVM')]",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "location": "[resourceGroup().location]",
           "apiVersion": "2015-06-15",
           "dependsOn": [
             "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmDCName)]",
             "[concat('Microsoft.Compute/virtualMachines/', variables('generalSettings').vmDCName, '/extensions/ConfigureDCVM')]",
-            "[resourceId('Microsoft.Compute/virtualMachines', 'SQLServerVM')]"
+            "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmSQLName)]"
           ],
           "tags": {
             "displayName": "ConfigureSQLVM"
@@ -646,8 +646,8 @@
           "location": "[resourceGroup().location]",
           "apiVersion": "2016-03-30",
           "dependsOn": [
-            "Microsoft.Compute/virtualMachines/SQLServerVM",
-            "Microsoft.Compute/virtualMachines/SQLServerVM/extensions/DSCConfigureSQLVM"
+            "[concat('Microsoft.Compute/virtualMachines/', variables('generalSettings').vmSQLName)]",
+            "[concat('Microsoft.Compute/virtualMachines/', variables('generalSettings').vmSQLName, '/extensions/DSCConfigureSQLVM')]"
           ],
           "tags": {
             "displayName": "StratexSQLConfig"
@@ -713,7 +713,7 @@
       }
     },
     {
-      "name": "SharePointVM",
+      "name": "[variables('generalSettings').vmSPName]",
       "type": "Microsoft.Compute/virtualMachines",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
@@ -774,14 +774,14 @@
       },
       "resources": [
         {
-          "name": "SharePointVM/DSCConfigureSPVM",
+          "name": "[concat(variables('generalSettings').vmSPName, '/DSCConfigureSPVM')]",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "location": "[resourceGroup().location]",
           "apiVersion": "2015-06-15",
           "dependsOn": [
             "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmDCName)]",
             "[concat('Microsoft.Compute/virtualMachines/', variables('generalSettings').vmDCName, '/extensions/ConfigureDCVM')]",
-            "[resourceId('Microsoft.Compute/virtualMachines', 'SharePointVM')]"
+            "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmSPName)]"
           ],
           "tags": {
             "displayName": "ConfigureSPVM"
@@ -845,8 +845,9 @@
           "location": "[resourceGroup().location]",
           "apiVersion": "2016-03-30",
           "dependsOn": [
-            "Microsoft.Compute/virtualMachines/SharePointVM",
-            "Microsoft.Compute/virtualMachines/SharePointVM/extensions/DSCConfigureSPVM"
+            "[concat('Microsoft.Compute/virtualMachines/', variables('generalSettings').vmSPName)]",
+            "[concat('Microsoft.Compute/virtualMachines/', variables('generalSettings').vmSPName, '/extensions/DSCConfigureSPVM')]",
+            "[concat('Microsoft.Compute/virtualMachines/', variables('generalSettings').vmSQLName, '/extensions/StratexSQLConfig')]"
           ],
           "tags": {
             "displayName": "StratexSharePointConfig"
