@@ -16,7 +16,8 @@ param
 	[String] $SolutionFileName = "StratexPoint-2016.wsp"
 )
 
-[String] $DomainNetbiosName = (Get-NetBIOSName -DomainFQDN $DomainFQDN)
+Add-PSSnapin Microsoft.SharePoint.PowerShell;
+
 
 Write-Host "The StratexSharePointConfig file is being executed. The parameters are: SQLName: $SQLName, DomainFQDN: $DomainFQDN, SqlSvcPassword: ####, SPFarmUserName: $SPFarmUserName";
 Write-Verbose -Message "Verbose: The StratexSharePointConfig file is being executed. The parameters are: SQLName: $SQLName, DomainFQDN: $DomainFQDN, SqlSvcPassword: ####, SPFarmUserName: $SPFarmUserName";
@@ -135,12 +136,15 @@ function Get-NetBIOSName
 ###################### WE DECLARE THE FUNCTIONS FIRST ######################
 
 ######################## THEN WE EXECUTE THE SCRIPTS #######################
+[String] $DomainNetbiosName = (Get-NetBIOSName -DomainFQDN $DomainFQDN)
 
     # The deployment of the solution is made in owstimer.exe tends to fail very often, so restart the service before to mitigate this risk
 	ResetOWSTIMER
 	DeployStratexWSP
 	ResetOWSTIMER
 	ConfigureStratexWSP	   
+
+	#Get-SPAlternateURL "$SPTrustedSitesName" | Set-SPAlternateURL “https://mysite.local”
 
 ######################## THEN WE EXECUTE THE SCRIPTS #######################
 

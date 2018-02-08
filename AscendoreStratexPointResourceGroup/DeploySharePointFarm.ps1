@@ -55,7 +55,7 @@ $DeploymentParameters = @{
 		vmSQLSize = "Standard_A2_v2";
 		vmSPSize = "Standard_A4_v2";
 		vmsTimeZone = "GMT Standard Time";
-		dnsLabelPrefix="ascendoreappfarm";
+		dnsLabelPrefix="stratexpointapp";
 	};
 };
 

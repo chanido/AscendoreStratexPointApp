@@ -249,7 +249,7 @@
       "vmVmSize": "[parameters('vmSPSize')]",
       "vmNicName": "[concat(variables('generalSettings').vmSPName, '-', 'nic-0')]",
       "vmPublicIPName": "vmSP-PublicIP",
-      "vmPublicIPDnsName": "[toLower(replace(concat(parameters('dnsLabelPrefix'), '-', variables('generalSettings').vmSPName), '_', '-'))]"
+      "vmPublicIPDnsName": "[parameters('dnsLabelPrefix')]"
     },
     "dscConfigureDCVM": {
       "fileName": "ConfigureDCVM.zip",
@@ -661,7 +661,7 @@
               "fileUris": [
                 "[concat(parameters('_artifactsLocation'), '/', variables('StratexSQLConfigScriptFolder'), '/', variables('StratexSQLConfigScriptFileName'), parameters('_artifactsLocationSasToken'))]"
               ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('StratexSQLConfigScriptFolder'), '/', variables('StratexSQLConfigScriptFileName'), ' -ComputerName ', variables('generalSettings').vmSQLName, ' -SqlSvcPassword ', parameters('sqlSvcPassword'))]"
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('StratexSQLConfigScriptFileName'), ' -ComputerName ', variables('generalSettings').vmSQLName, ' -SqlSvcPassword ', parameters('sqlSvcPassword'))]"
             }
           }
         }
@@ -860,7 +860,7 @@
               "fileUris": [
                 "[concat(parameters('_artifactsLocation'), '/', variables('StratexSharePointConfigScriptFolder'), '/', variables('StratexSharePointConfigScriptFileName'), parameters('_artifactsLocationSasToken'))]"
               ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('StratexSharePointConfigScriptFolder'), '/', variables('StratexSharePointConfigScriptFileName'), ' -SQLName ', variables('generalSettings').vmSQLName, ' -DomainFQDN ', parameters('domainFQDN'), ' -SqlSvcPassword ',  parameters('sqlSvcPassword'), ' -SPFarmUserName ', parameters('spFarmUserName'))]"
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('StratexSharePointConfigScriptFileName'), ' -SQLName ', variables('generalSettings').vmSQLName, ' -DomainFQDN ', parameters('domainFQDN'), ' -SqlSvcPassword ',  parameters('sqlSvcPassword'), ' -SPFarmUserName ', parameters('spFarmUserName'))]"
             }
           }
         }
