@@ -37,8 +37,6 @@ configuration ConfigureSQLVM
 
     Node localhost
     {
-		InstanceName = "STRATEXPOINT";
-
         LocalConfigurationManager
         {
             ConfigurationMode = 'ApplyOnly'
@@ -220,15 +218,11 @@ configuration ConfigureSQLVM
             DependsOn = "[xComputer]DomainJoin"
         }
 
-        <#
         xSQLServerSetup ConfigureSQLServer
         {
             SetupCredential = $DomainAdminCreds
             InstanceName = "STRATEXPOINT"
-            SQLUserDBDir = "F:\DATA"
-            SQLUserDBLogDir = "G:\LOG"
         }
-        #>
     }
 }
 
