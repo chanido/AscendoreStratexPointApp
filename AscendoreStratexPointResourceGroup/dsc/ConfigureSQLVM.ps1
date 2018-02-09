@@ -38,7 +38,7 @@ configuration ConfigureSQLVM
     )
 
     #Import-DscResource -ModuleName xComputerManagement, xActiveDirectory, xSql, xSQLServer, xSQLps
-	Import-DscResource -ModuleName xComputerManagement, xNetworking, xDisk, cDisk, xActiveDirectory, xSQLServer
+	Import-DscResource -ModuleName xComputerManagement, xNetworking, xDisk, cDisk, xActiveDirectory, xSQLServer, xSql, xSQLps
 
     [System.Management.Automation.PSCredential]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainNetbiosName}\$($DomainAdminCreds.UserName)", $DomainAdminCreds.Password)
     [System.Management.Automation.PSCredential]$SPSCreds = New-Object System.Management.Automation.PSCredential ("${DomainNetbiosName}\$($SPSetupCreds.UserName)", $SPSetupCreds.Password)
