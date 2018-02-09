@@ -1,7 +1,5 @@
 ﻿configuration ConfigureDCVM
 {
-	configuration CreateADPDC
-{
    param
    (
         [Parameter(Mandatory)]
@@ -398,4 +396,4 @@
 #            return $DomainFQDN
 #        }
 #    }
-} 
+#} 

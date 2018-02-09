@@ -460,7 +460,7 @@
                 "function": "[variables('dscConfigureDCVM').function]"
               },
               "configurationArguments": {
-                "domainFQDN": "[parameters('domainFQDN')]",
+                "DomainFQDN": "[parameters('domainFQDN')]",
                 "PrivateIP": "[variables('vmDC').nicPrivateIPAddress]"
               },
               "privacy": {
@@ -472,11 +472,12 @@
                 "AdminCreds": {
                   "UserName": "[parameters('adminUsername')]",
                   "Password": "[parameters('adminPassword')]"
-                },
-                "AdfsSvcCreds": {
-                  "UserName": "[parameters('adfsSvcUserName')]",
-                  "Password": "[parameters('adfsSvcPassword')]"
                 }
+                //,
+                //"AdfsSvcCreds": {
+                //  "UserName": "[parameters('adfsSvcUserName')]",
+                //  "Password": "[parameters('adfsSvcPassword')]"
+                //}
               }
             }
           }
