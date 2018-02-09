@@ -8,6 +8,13 @@
         [Parameter(Mandatory)]
         [System.Management.Automation.PSCredential]$Admincreds,
 
+        [Parameter(Mandatory)]
+        [System.Management.Automation.PSCredential]$AdfsSvcCreds,
+
+        [Parameter(Mandatory)]
+        [String]$PrivateIP,
+
+
         [Int]$RetryCount=20,
         [Int]$RetryIntervalSec=30
     )

@@ -5,6 +5,21 @@ configuration ConfigureSQLVM
 
     param
     (
+        #[Parameter(Mandatory)]
+        #[String]$DomainFQDN,
+
+        #[Parameter(Mandatory)]
+        #[System.Management.Automation.PSCredential]$DomainAdminCreds,
+
+        #[Parameter(Mandatory)]
+        #[System.Management.Automation.PSCredential]$SqlSvcCreds,
+
+        #[Parameter(Mandatory)]
+        #[System.Management.Automation.PSCredential]$SPSetupCreds,
+        
+		[Parameter(Mandatory)]
+        [String]$DNSServer,
+
         [Parameter(Mandatory)]
         [String]$DomainFQDN,
 
@@ -16,8 +31,9 @@ configuration ConfigureSQLVM
 
         [Parameter(Mandatory)]
         [System.Management.Automation.PSCredential]$SPSetupCreds,
-        [String]$DomainNetbiosName=(Get-NetBIOSName -DomainName $DomainFQDN),
-        [Int]$RetryCount=30,
+		
+		[String]$DomainNetbiosName=(Get-NetBIOSName -DomainName $DomainFQDN),
+		[Int]$RetryCount=30,
         [Int]$RetryIntervalSec=60
     )
 
