@@ -85,8 +85,8 @@ function ConfigureStratexWSP
 	$DBUpdateStringKey = [Ascendore.Utils.StratexConstants]::DBUpdateString;
 	$DBAutoConfigDisableKey = [Ascendore.Utils.StratexConstants]::DBAutoconfigDisabledKey
 	
-	[Ascendore.Utils.Common]::SetWebApplicationPropertyCypher($WebApp, $PathToDatebaseFile, "C:\Program Files\Microsoft SQL Server\MSSQL13.MSSQLSERVER\MSSQL\DATA")
-	[Ascendore.Utils.Common]::SetWebApplicationPropertyCypher($WebApp, $PathToDatebaseLogFile, "C:\Program Files\Microsoft SQL Server\MSSQL13.MSSQLSERVER\MSSQL\DATA")
+	[Ascendore.Utils.Common]::SetWebApplicationPropertyCypher($WebApp, $PathToDatebaseFile, "C:\Program Files\Microsoft SQL Server\MSSQL13.STRATEXPOINT\MSSQL\DATA")
+	[Ascendore.Utils.Common]::SetWebApplicationPropertyCypher($WebApp, $PathToDatebaseLogFile, "C:\Program Files\Microsoft SQL Server\MSSQL13.STRATEXPOINT\MSSQL\DATA")
 	
 	$DBCreationValue = "Data Source=$SQLName;User ID=StratexDBOwner;Password=$SqlSvcPassword;Trusted_Connection=False;"
 	$DBUpdateValue = "Data Source=$SQLName;User ID=StratexDBUpdater;Password=$SqlSvcPassword;Trusted_Connection=False;"

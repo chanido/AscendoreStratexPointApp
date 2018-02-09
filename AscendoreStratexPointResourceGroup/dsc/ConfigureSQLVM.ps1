@@ -37,6 +37,8 @@ configuration ConfigureSQLVM
 
     Node localhost
     {
+		InstanceName = "STRATEXPOINT";
+
         LocalConfigurationManager
         {
             ConfigurationMode = 'ApplyOnly'
@@ -136,7 +138,7 @@ configuration ConfigureSQLVM
             Name = "${DomainNetbiosName}\$($DomainAdminCreds.UserName)"
             Ensure = "Present"
             SQLServer = $ComputerName
-            SQLInstanceName = "MSSQLSERVER"
+            SQLInstanceName = "STRATEXPOINT"
             LoginType = "WindowsUser"
             DependsOn = "[xComputer]DomainJoin"
         }
@@ -147,7 +149,7 @@ configuration ConfigureSQLVM
   #          Name = $StratexDBUpdater.UserName
   #          LoginType = 'SqlLogin'
   #          SQLServer = $ComputerName
-  #          SQLInstanceName = 'DSC'
+  #          SQLInstanceName = 'STRATEXPOINT'
   #          LoginCredential = $StratexDBUpdater
   #          LoginMustChangePassword = $false
   #          LoginPasswordExpirationEnabled = $true
@@ -161,7 +163,7 @@ configuration ConfigureSQLVM
   #          Name = $StratexDBOwner.UserName
   #          LoginType = 'SqlLogin'
   #          SQLServer = $ComputerName
-  #          SQLInstanceName = 'DSC'
+  #          SQLInstanceName = 'STRATEXPOINT'
   #          LoginCredential = $StratexDBOwner
   #          LoginMustChangePassword = $false
   #          LoginPasswordExpirationEnabled = $true
@@ -175,7 +177,7 @@ configuration ConfigureSQLVM
             Name = "${DomainNetbiosName}\$($SPSetupCreds.UserName)"
             Ensure = "Present"
             SQLServer = $ComputerName
-            SQLInstanceName = "MSSQLSERVER"
+            SQLInstanceName = "STRATEXPOINT"
             LoginType = "WindowsUser"
             DependsOn = "[xADUser]CreateSPSetupAccount"
         }
@@ -186,7 +188,7 @@ configuration ConfigureSQLVM
         #    MembersToInclude = "${DomainNetbiosName}\$($DomainAdminCreds.UserName), $($StratexDBOwner.UserName)" ##WatchOut
         #    Ensure = "Present"
         #    SQLServer = $ComputerName
-        #    SQLInstanceName = "MSSQLSERVER"
+        #    SQLInstanceName = "STRATEXPOINT"
         #    DependsOn = "[xSQLServerLogin]AddDomainAdminLogin"
         #}
 
@@ -195,7 +197,7 @@ configuration ConfigureSQLVM
             ServerRoleName = "securityadmin"
             MembersToInclude = "${DomainNetbiosName}\$($SPSetupCreds.UserName)"
             SQLServer = $ComputerName
-            SQLInstanceName = "MSSQLSERVER"
+            SQLInstanceName = "STRATEXPOINT"
             Ensure = "Present"
             DependsOn = "[xSQLServerLogin]AddSPSetupLogin"
         }
@@ -205,7 +207,7 @@ configuration ConfigureSQLVM
             ServerRoleName = "dbcreator"
             MembersToInclude = "${DomainNetbiosName}\$($SPSetupCreds.UserName)"
             SQLServer = $ComputerName
-            SQLInstanceName = "MSSQLSERVER"
+            SQLInstanceName = "STRATEXPOINT"
             Ensure = "Present"
             DependsOn = "[xSQLServerLogin]AddSPSetupLogin"
         }
@@ -213,7 +215,7 @@ configuration ConfigureSQLVM
         xSQLServerMaxDop ConfigureMaxDOP
         {
             SQLServer = $ComputerName
-            SQLInstanceName = "MSSQLSERVER"
+            SQLInstanceName = "STRATEXPOINT"
             MaxDop = 1
             DependsOn = "[xComputer]DomainJoin"
         }
@@ -222,7 +224,7 @@ configuration ConfigureSQLVM
         xSQLServerSetup ConfigureSQLServer
         {
             SetupCredential = $DomainAdminCreds
-            InstanceName = "MSSQLSERVER"
+            InstanceName = "STRATEXPOINT"
             SQLUserDBDir = "F:\DATA"
             SQLUserDBLogDir = "G:\LOG"
         }
