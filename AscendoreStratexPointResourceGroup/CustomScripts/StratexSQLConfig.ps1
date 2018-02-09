@@ -8,9 +8,9 @@ param
 )
 
 Add-Content c:\stratexlog.txt "The Stratex Log file has been initialised"
-Add-Content c:\stratexlog.txt "The StratexSQLConfig file is being executed. The parameters are: ComputerName: $ComputerName\\STRATEXPOINT, SqlSvcPassword: ####"
+Add-Content c:\stratexlog.txt "The StratexSQLConfig file is being executed. The parameters are: ComputerName: $ComputerName\\MSSQLSERVER, SqlSvcPassword: ####"
 
-restart-service -Force 'STRATEXPOINT'
+restart-service -Force 'MSSQLSERVER'
 Add-Content c:\stratexlog.txt "Server Restarted"
 
 Start-Sleep -Seconds 60
@@ -21,7 +21,7 @@ Add-Content c:\stratexlog.txt "Waiting 60 seconds..."
 
 [System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMO') | out-null
 # Connect to the instance using SMO
-$s = new-object ('Microsoft.SqlServer.Management.Smo.Server') $ComputerName\STRATEXPOINT
+$s = new-object ('Microsoft.SqlServer.Management.Smo.Server') $ComputerName\MSSQLSERVER
 [string]$nm = $s.Name
 [string]$mode = $s.Settings.LoginMode
 
@@ -43,13 +43,13 @@ $s.Logins.Item('sa').ChangePassword($SqlSvcPassword)
 $s.Logins.Item('sa').Alter()
 Add-Content c:\stratexlog.txt "Password changed for SA"
 
-restart-service -Force 'STRATEXPOINT'
+restart-service -Force 'MSSQLSERVER'
 
 Add-Content c:\stratexlog.txt "Server Restarted"
 
 Import-Module SQLPS -DisableNameChecking
 #Now we will create the stratex users
-$login = New-Object -TypeName Microsoft.SqlServer.Management.Smo.Login -ArgumentList $ComputerName\STRATEXPOINT, "StratexDBOwner"
+$login = New-Object -TypeName Microsoft.SqlServer.Management.Smo.Login -ArgumentList $ComputerName\MSSQLSERVER, "StratexDBOwner"
 $login.LoginType = [Microsoft.SqlServer.Management.Smo.LoginType]::SqlLogin
 $login.PasswordExpirationEnabled = $false
 $login.Create($SqlSvcPassword)
@@ -57,7 +57,7 @@ $login.AddToRole("sysadmin")
 $login.Alter()
 Add-Content c:\stratexlog.txt "Login StratexDBOwner created successfully."
 
-$login = New-Object -TypeName Microsoft.SqlServer.Management.Smo.Login -ArgumentList $ComputerName\STRATEXPOINT, "StratexDBUpdater"
+$login = New-Object -TypeName Microsoft.SqlServer.Management.Smo.Login -ArgumentList $ComputerName\MSSQLSERVER, "StratexDBUpdater"
 $login.LoginType = [Microsoft.SqlServer.Management.Smo.LoginType]::SqlLogin
 $login.PasswordExpirationEnabled = $false
 $login.Create($SqlSvcPassword)
@@ -65,5 +65,5 @@ $login.AddToRole("sysadmin")
 $login.Alter()
 Add-Content c:\stratexlog.txt "Login StratexDBUpdater created successfully."
 
-restart-service -Force 'STRATEXPOINT'
+restart-service -Force 'MSSQLSERVER'
 Add-Content c:\stratexlog.txt "Server Restarted"
