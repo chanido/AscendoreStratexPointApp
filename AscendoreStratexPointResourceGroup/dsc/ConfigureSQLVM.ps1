@@ -1,7 +1,7 @@
 configuration ConfigureSQLVM
 {
     param
-    (
+    ( 
         [Parameter(Mandatory)]
         [String]$DNSServer,
 

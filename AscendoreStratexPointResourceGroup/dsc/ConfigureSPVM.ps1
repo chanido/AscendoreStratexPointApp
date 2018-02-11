@@ -1,7 +1,7 @@
 configuration ConfigureSPVM
 {
     param
-    (
+    ( 
         [Parameter(Mandatory)]
         [String]$DNSServer,
 

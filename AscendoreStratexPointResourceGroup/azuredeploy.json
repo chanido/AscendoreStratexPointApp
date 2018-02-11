@@ -839,7 +839,7 @@
             }
           }
         },
-        {
+        { 
           "name": "StratexSharePointConfig",
           "type": "extensions",
           "location": "[resourceGroup().location]",

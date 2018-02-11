@@ -1,7 +1,7 @@
 ﻿configuration ConfigureDCVM
 {
     param
-    (
+    ( 
         [Parameter(Mandatory)]
         [String]$DomainFQDN,
 
