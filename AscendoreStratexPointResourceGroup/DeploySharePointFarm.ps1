@@ -9,7 +9,7 @@ Set-AzureRmContext -SubscriptionId 'a8e1b1ea-cee1-40f5-8ae9-37a57ff63c4b'
 
 ############################ Resource Deployment ############################
 
-$ResourceGroupName = "AscendoreAzureApp";
+$ResourceGroupName = "StratexPoint-AzureApp-ResourceGroup";
 $DeploymentMode = "Complete"; #"Incremental"; #
 
 if ($DeploymentMode -eq "Complete") {
@@ -30,12 +30,12 @@ if(!$PSScriptRoot){ $PSScriptRoot = "C:\GitHub\AscendoreStratexPointApp\Ascendor
 $Password = "GoodPassword!1";
 
 $DeploymentParameters = @{
-	Name = "AscendoreAppDeployment";
+	Name = "StratexPointAppDeployment";
 	ResourceGroup = $ResourceGroupName;
 	Mode = $DeploymentMode;
 	TemplateFile= "$PSScriptRoot\azuredeploy.json";
 	TemplateParameterObject = @{
-		domainFQDN = "ascendore.local";
+		domainFQDN = "stratexpoint.local";
 		adminUserName = "FarmAdm";
 		adminPassword = $Password;
 		adfsSvcUserName = "adfssvcadm";
@@ -52,8 +52,8 @@ $DeploymentParameters = @{
 		spAppPoolPassword = $Password;
 		spPassphrase = "Time you enjoy wasting is not wasted time";
 		vmDCSize = "Standard_A2_v2";#"Standard_A1_v2";
-		vmSQLSize = "Standard_A2_v2";
-		vmSPSize = "Standard_A4_v2";
+		vmSQLSize = "Standard_A8_v2";
+		vmSPSize = "Standard_A8_v2";
 		vmsTimeZone = "GMT Standard Time";
 		dnsLabelPrefix="stratexpointapp";
 	};
