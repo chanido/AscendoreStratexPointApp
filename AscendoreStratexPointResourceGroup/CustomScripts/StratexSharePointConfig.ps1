@@ -7,7 +7,7 @@ param
     [String]$DomainFQDN,
 
 	[Parameter(Mandatory)]
-    [String]$SqlSvcPassword,
+    [securestring]$SqlSvcPassword,
 
     [Parameter(Mandatory)]
     [String]$SPFarmUserName,
