@@ -32,7 +32,8 @@ configuration ConfigureSPVM
         [Parameter(Mandatory)]
         [System.Management.Automation.PSCredential]$SPPassphraseCreds,
 
-        [String] $SPTrustedSitesName = "SPSites"
+		[Parameter(Mandatory)]
+        [String] $SPTrustedSitesName
     )
 
     Import-DscResource -ModuleName xComputerManagement, xDisk, cDisk, xNetworking, xActiveDirectory, xCredSSP, xWebAdministration, SharePointDsc, xPSDesiredStateConfiguration, xDnsServer, xCertificate

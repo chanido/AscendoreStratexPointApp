@@ -7,7 +7,7 @@ param
     [String]$DomainFQDN,
 
 	[Parameter(Mandatory)]
-    [securestring]$SqlSvcPassword,
+    [String]$SqlSvcPassword,
 
     [Parameter(Mandatory)]
     [String]$SPFarmUserName,
@@ -21,8 +21,7 @@ param
 Add-PSSnapin Microsoft.SharePoint.PowerShell;
 
 
-Write-Host "The StratexSharePointConfig file is being executed. The parameters are: SQLName: $SQLName, DomainFQDN: $DomainFQDN, SqlSvcPassword: ####, SPFarmUserName: $SPFarmUserName";
-Write-Verbose -Message "Verbose: The StratexSharePointConfig file is being executed. The parameters are: SQLName: $SQLName, DomainFQDN: $DomainFQDN, SqlSvcPassword: ####, SPFarmUserName: $SPFarmUserName";
+Add-Content c:\stratexlog.txt "The StratexSharePointConfig file is being executed. The parameters are: SQLName: $SQLName, DomainFQDN: $DomainFQDN, SqlSvcPassword: ####, SPFarmUserName: $SPFarmUserName";
 
 ###################### WE DECLARE THE FUNCTIONS FIRST ######################
 $deploymentsCounter = 0;
@@ -32,36 +31,38 @@ function DeployStratexWSP
 
 	if ($deploymentsCounter -le 3)
 	{
-		Write-Host "Trying to deploy the solution try#$deploymentsCounter";
+		Add-Content c:\stratexlog.txt "Trying to deploy the solution try#$deploymentsCounter";
 
 		try
 		{
-			Install-SPSolution -Identity $SolutionFileName -GACDeployment -AllWebApplications -Force
-			
-			$JobName = "*solution-deployment*$SolutionFileName*"
+            Install-SPSolution -Identity $SolutionFileName -GACDeployment -AllWebApplications -Force
+
+            $JobName = "*solution-deployment*$SolutionFileName*"
 			$job = Get-SPTimerJob | ?{ $_.Name -like $JobName }
-			
-			if ($job -eq $null) 
+
+            if ($job -eq $null) 
 			{
-			  Write-Host Timer job not found for $SolutionFileName
+			  Add-Content c:\stratexlog.txt "Timer job not found for $SolutionFileName"
 			}
 			else
 			{
 			  $JobFullName = $job.Name
-			  Write-Host -NoNewLine Waiting to finish job $JobFullName
+			  Add-Content c:\stratexlog.txt  "c:\stratexlog.txt Waiting to finish job $JobFullName"
 			  
+			  Add-Content c:\stratexlog.txt  "c:\stratexlog.txt Waiting for $JobFullName to finish"
 			  while ((Get-SPTimerJob $JobFullName) -ne $null) 
 			  {
-			    Write-Host -NoNewLine .
-			    Start-Sleep -Seconds 2
+			    Add-Content c:\stratexlog.txt "."
+			    Start-Sleep -Seconds 10
 			  }
-			  Write-Host Finished
+			  Add-Content c:\stratexlog.txt "Finished"
 			}
 		}
 		catch 
 		{
-			Write-Verbose -Message '$SolutionFileName deployment failed, we will try to do it again'
-			Write-Verbose -Message $_.Exception.Message
+			Add-Content c:\stratexlog.txt '$SolutionFileName deployment failed, we will wait 120secs and try to do it again'
+			Add-Content c:\stratexlog.txt $_.Exception.Message
+			Start-Sleep -Seconds 120
 			DeployStratexWSP;
 		}
 	}
@@ -74,6 +75,8 @@ function DeployStratexWSP
 function ConfigureStratexWSP
 {
 	#Write Web Properties
+
+	Add-Content c:\stratexlog.txt "Configuring web properties..."
 
 	$WebApp = Get-SPWebApplication "http://$SPTrustedSitesName/"
 	
@@ -96,19 +99,31 @@ function ConfigureStratexWSP
 	
 	
 	[Ascendore.Utils.Common]::SetWebApplicationPropertyCypher($WebApp, $DBAutoConfigDisableKey, "false")
+
+	Add-Content c:\stratexlog.txt "Web properties configured"
 }
 
 function CreateStratexRootSite
 {
-	$w = Get-SPWebApplication "http://$SPTrustedSitesName/"
+    if ([bool] (Get-SPSite "http://$SPTrustedSitesName/" -ErrorAction SilentlyContinue) -eq $true) {
+        Add-Content c:\stratexlog.txt "The root site was already present, we will delete it!"
+        Remove-SPSite -Identity "http://$SPTrustedSitesName/" -Confirm:$False
+    } 
 
-	New-SPSite http://spsites -OwnerAlias "i:0#.w|$DomainNetbiosName\$SPFarmUserName" -HostHeaderWebApplication $w -Name "StratexPoint RBPM" -Template "StratexSiteDefinition#0"
+	Add-Content c:\stratexlog.txt "Creating root site..."
+	#$w = Get-SPWebApplication "http://$SPTrustedSitesName/"
+    $template = Get-SPWebTemplate "StratexSiteDefinition#0"
+
+	New-SPSite -Url "http://$SPTrustedSitesName/" -OwnerAlias "i:0#.w|$DomainNetbiosName\$SPFarmUserName" -Name "StratexPoint RBPM" -Template $template
+	Add-Content c:\stratexlog.txt "Root site created"
 }
 
 function ResetOWSTIMER
 {
+	Add-Content c:\stratexlog.txt "Resetting OWSTIMER"
     $farm = Get-SPFarm
 	$farm.TimerService.Instances | foreach { $_.Stop(); $_.Start(); }
+	Add-Content c:\stratexlog.txt "OWSTIMER reset"
 }
 
 function Get-NetBIOSName
@@ -144,7 +159,8 @@ function Get-NetBIOSName
 	ResetOWSTIMER
 	DeployStratexWSP
 	ResetOWSTIMER
-	ConfigureStratexWSP	   
+	ConfigureStratexWSP
+	CreateStratexRootSite
 
 	#Get-SPAlternateURL "$SPTrustedSitesName" | Set-SPAlternateURL “https://mysite.local”
 
