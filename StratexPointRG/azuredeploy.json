@@ -28,8 +28,8 @@
     },
     "VMPrefix": {
       "type": "string",
-      "defaultValue": "STRATEXPOINT",
-      "maxLength": 12,
+      "defaultValue": "STRATEXFARM",
+      "maxLength": 11,
       "metadata": {
         "description": "FQDN of the AD forest to create"
       }
