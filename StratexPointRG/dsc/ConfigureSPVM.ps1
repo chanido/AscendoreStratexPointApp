@@ -620,40 +620,40 @@ configuration ConfigureSPVM
             DependsOn = "[xScript]SetHTTPSCertificate"
         }
 
-		SPFarmSolution InstallStratexPoint2 
-        {
-            LiteralPath = "F:\Setup\StratexPoint-2016.wsp"
-            Name = "StratexPoint-2016.wsp"
-            Deployed = $true
-            Ensure = "Present"
-            PsDscRunAsCredential = $SPSetupCredsQualified
-            DependsOn = "[SPFarmSolution]InstallStratexPoint"
-        }
+		#SPFarmSolution InstallStratexPoint2 
+  #      {
+  #          LiteralPath = "F:\Setup\StratexPoint-2016.wsp"
+  #          Name = "StratexPoint-2016.wsp"
+  #          Deployed = $true
+  #          Ensure = "Present"
+  #          PsDscRunAsCredential = $SPSetupCredsQualified
+  #          DependsOn = "[SPFarmSolution]InstallStratexPoint"
+  #      }
 
-		xScript RestartSPTimerAfterStratexSolution
-        {
-            SetScript = 
-            {
-                # The deployment of the solution is made in owstimer.exe tends to fail very often, so restart the service before to mitigate this risk
-                ResetOWSTIMER
-				DeployStratexWSP
-				ResetOWSTIMER
-				ConfigureStratexWSP
+		#xScript RestartSPTimerAfterStratexSolution
+  #      {
+  #          SetScript = 
+  #          {
+  #              # The deployment of the solution is made in owstimer.exe tends to fail very often, so restart the service before to mitigate this risk
+  #              ResetOWSTIMER
+		#		DeployStratexWSP
+		#		ResetOWSTIMER
+		#		ConfigureStratexWSP
 				
-            }
-            GetScript =  
-            {
-                # This block must return a hashtable. The hashtable must only contain one key Result and the value must be of type String.
-                return @{ "Result" = "false" }
-            }
-            TestScript = 
-            {
-                # If it returns $false, the SetScript block will run. If it returns $true, the SetScript block will not run.
-               return $false
-            }
-            PsDscRunAsCredential = $DomainAdminCredsQualified
-            DependsOn = "[SPFarmSolution]InstallStratexPoint2"
-        }
+  #          }
+  #          GetScript =  
+  #          {
+  #              # This block must return a hashtable. The hashtable must only contain one key Result and the value must be of type String.
+  #              return @{ "Result" = "false" }
+  #          }
+  #          TestScript = 
+  #          {
+  #              # If it returns $false, the SetScript block will run. If it returns $true, the SetScript block will not run.
+  #             return $false
+  #          }
+  #          PsDscRunAsCredential = $DomainAdminCredsQualified
+  #          DependsOn = "[SPFarmSolution]InstallStratexPoint2"
+  #      }
 
         #SPSite DevSite
         #{
