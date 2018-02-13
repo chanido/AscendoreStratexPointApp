@@ -179,7 +179,7 @@
       "metadata": {
         "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
       },
-      "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/sharepoint-adfs/"
+      "defaultValue": "https://raw.githubusercontent.com/chanido/AscendoreStratexPointApp/master/StratexPointRG/"
     },
     "_artifactsLocationSasToken": {
       "type": "securestring",
@@ -259,7 +259,10 @@
       "script": "ConfigureSPVM.ps1",
       "function": "ConfigureSPVM",
       "forceUpdateTag": "1.0"
-    }
+    },
+    "StratexCustomScriptsFolder": "CustomScripts",
+    "StratexSQLConfigScriptFileName": "StratexSQLConfig.ps1",
+    "StratexSharePointConfigScriptFileName": "StratexSharePointConfig.ps1"
   },
   "resources": [
     {
@@ -573,7 +576,31 @@
         }
       },
       "resources": [
-
+        {
+          "apiVersion": "2016-03-30",
+          "dependsOn": [
+            "[concat('Microsoft.Compute/virtualMachines/', variables('generalSettings').vmSPName, '/extensions/ConfigureSPVM')]",
+            "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmSQLName)]"
+          ],
+          "location": "[resourceGroup().location]",
+          "name": "StratexSQLConfig",
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.4",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[concat(parameters('_artifactsLocation'), '/', variables('StratexCustomScriptsFolder'), '/', variables('StratexSQLConfigScriptFileName'), parameters('_artifactsLocationSasToken'))]"
+              ],
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('StratexSQLConfigScriptFileName'), ' -ComputerName ', variables('generalSettings').vmSQLName, ' -SqlSvcPassword ', parameters('sqlSvcPassword'))]"
+            }
+          },
+          "tags": {
+            "displayName": "StratexSQLConfig"
+          },
+          "type": "extensions"
+        }
       ]
     },
     {
@@ -682,6 +709,31 @@
         }
       },
       "resources": [
+        {
+          "apiVersion": "2016-03-30",
+          "dependsOn": [
+            "[concat('Microsoft.Compute/virtualMachines/', variables('generalSettings').vmSQLName, '/extensions/StratexSQLConfig')]",
+            "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmSPName)]"
+          ],
+          "location": "[resourceGroup().location]",
+          "name": "StratexSharePointConfig",
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.4",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[concat(parameters('_artifactsLocation'), '/', variables('StratexCustomScriptsFolder'), '/', variables('StratexSharePointConfigScriptFileName'), parameters('_artifactsLocationSasToken'))]"
+              ],
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('StratexSharePointConfigScriptFileName'), ' -SQLName ', variables('generalSettings').vmSQLName, ' -DomainFQDN ', parameters('domainFQDN'), ' -SqlSvcPassword ',  parameters('sqlSvcPassword'), ' -SPFarmUserName ', parameters('spFarmUserName'), ' -SPTrustedSitesName ', variables('generalSettings').vmSPName)]"
+            }
+          },
+          "tags": {
+            "displayName": "StratexSharePointConfig"
+          },
+          "type": "extensions"
+        }
       ]
     },
     {
@@ -742,8 +794,8 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmDCName)]",
-        "[concat('Microsoft.Compute/virtualMachines/', variables('generalSettings').vmDCName, '/extensions/ConfigureDCVM')]",
+        "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmSQLName)]",
+        "[concat('Microsoft.Compute/virtualMachines/', variables('generalSettings').vmSQLName, '/extensions/ConfigureSQLVM')]",
         "[resourceId('Microsoft.Compute/virtualMachines', variables('generalSettings').vmSPName)]"
       ],
       "tags": {
@@ -766,7 +818,8 @@
             "DNSServer": "[variables('vmDC').nicPrivateIPAddress]",
             "DomainFQDN": "[parameters('domainFQDN')]",
             "DCName": "[variables('generalSettings').vmDCName]",
-            "SQLName": "[variables('generalSettings').vmSQLName]"
+            "SQLName": "[variables('generalSettings').vmSQLName]",
+            "SPTrustedSitesName": "[variables('generalSettings').vmSPName]"
           },
           "privacy": {
             "dataCollection": "enable"

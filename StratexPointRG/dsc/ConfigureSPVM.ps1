@@ -1,7 +1,7 @@
 configuration ConfigureSPVM
 {
     param
-    (
+    ( 
         [Parameter(Mandatory)]
         [String]$DNSServer,
 
@@ -32,7 +32,8 @@ configuration ConfigureSPVM
         [Parameter(Mandatory)]
         [System.Management.Automation.PSCredential]$SPPassphraseCreds,
 
-        [String] $SPTrustedSitesName = "SPSites"
+		[Parameter(Mandatory)]
+        [String] $SPTrustedSitesName
     )
 
     Import-DscResource -ModuleName xComputerManagement, xDisk, cDisk, xNetworking, xActiveDirectory, xCredSSP, xWebAdministration, SharePointDsc, xPSDesiredStateConfiguration, xDnsServer, xCertificate
@@ -45,11 +46,12 @@ configuration ConfigureSPVM
     [System.Management.Automation.PSCredential] $SPFarmCredsQualified = New-Object System.Management.Automation.PSCredential ("${DomainNetbiosName}\$($SPFarmCreds.UserName)", $SPFarmCreds.Password)
     [System.Management.Automation.PSCredential] $SPSvcCredsQualified = New-Object System.Management.Automation.PSCredential ("${DomainNetbiosName}\$($SPSvcCreds.UserName)", $SPSvcCreds.Password)
     [System.Management.Automation.PSCredential] $SPAppPoolCredsQualified = New-Object System.Management.Automation.PSCredential ("${DomainNetbiosName}\$($SPAppPoolCreds.UserName)", $SPAppPoolCreds.Password)
-    [String] $SPDBPrefix = "SP16DSC_"
+    [String] $SPDBPrefix = "STRATEX_"
     [Int] $RetryCount = 30
     [Int] $RetryIntervalSec = 30
     $ComputerName = Get-Content env:computername
-    $LdapcpLink = (Get-LatestGitHubRelease -repo "Yvand/LDAPCP" -artifact "LDAPCP.wsp")
+	$LdapcpLink = "https://github.com/chanido/AscendoreStratexPointApp/raw/master/AscendoreStratexPointResourceGroup/WSPs/Yvand-LDAPCP.wsp";#(Get-LatestGitHubRelease -repo "Yvand/LDAPCP" -artifact "LDAPCP.wsp")
+    $StratexPointLink = "https://github.com/chanido/AscendoreStratexPointApp/raw/master/AscendoreStratexPointResourceGroup/WSPs/StratexPoint-2016.wsp";
 
     Node localhost
     {
@@ -227,7 +229,14 @@ configuration ConfigureSPVM
             Uri             = $LdapcpLink
             DestinationPath = "F:\Setup\LDAPCP.wsp"
             DependsOn = "[File]AccountsProvisioned"
-        }        
+        }      
+
+		xRemoteFile DownloadStratexPoint
+        {  
+            Uri             = $StratexPointLink
+            DestinationPath = "F:\Setup\StratexPoint-2016.wsp"
+            DependsOn = "[File]AccountsProvisioned"
+        }   
 
         <#
         xRemoteFile Download201612CU
@@ -602,27 +611,48 @@ configuration ConfigureSPVM
             DependsOn                = "[SPWebApplicationExtension]ExtendWebApp"
         }
 
-        SPSite DevSite
+		SPFarmSolution InstallStratexPoint 
         {
-            Url                      = "http://$SPTrustedSitesName/"
-            OwnerAlias               = "i:0#.w|$DomainNetbiosName\$($DomainAdminCreds.UserName)"
-            SecondaryOwnerAlias      = "i:05.t|$DomainFQDN|$($DomainAdminCreds.UserName)@$DomainFQDN"
-            Name                     = "Developer site"
-            Template                 = "DEV#0"
-            PsDscRunAsCredential     = $SPSetupCredsQualified
-            DependsOn                = "[xScript]SetHTTPSCertificate"
+            LiteralPath = "F:\Setup\StratexPoint-2016.wsp"
+            Name = "StratexPoint-2016.wsp"
+            Deployed = $true
+            Ensure = "Present"
+            PsDscRunAsCredential = $SPSetupCredsQualified
+            DependsOn = "[xScript]SetHTTPSCertificate"
         }
 
-        SPSite TeamSite
-        {
-            Url                      = "http://$SPTrustedSitesName/sites/team"
-            OwnerAlias               = "i:0#.w|$DomainNetbiosName\$($DomainAdminCreds.UserName)"
-            SecondaryOwnerAlias      = "i:05.t|$DomainFQDN|$($DomainAdminCreds.UserName)@$DomainFQDN"
-            Name                     = "Team site"
-            Template                 = "STS#0"
-            PsDscRunAsCredential     = $SPSetupCredsQualified
-            DependsOn                = "[xScript]SetHTTPSCertificate"
-        }
+        #SPSite DevSite
+        #{
+        #    Url                      = "http://$SPTrustedSitesName/"
+        #    OwnerAlias               = "i:0#.w|$DomainNetbiosName\$($DomainAdminCreds.UserName)"
+        #    SecondaryOwnerAlias      = "i:05.t|$DomainFQDN|$($DomainAdminCreds.UserName)@$DomainFQDN"
+        #    Name                     = "Developer site"
+        #    Template                 = "DEV#0"
+        #    PsDscRunAsCredential     = $SPSetupCredsQualified
+        #    DependsOn                = "[xScript]SetHTTPSCertificate"
+        #}
+
+		#SPSite StratexPointSite
+  #      {
+  #          Url                      = "http://$SPTrustedSitesName/"
+  #          OwnerAlias               = "i:0#.w|$DomainNetbiosName\$($DomainAdminCreds.UserName)"
+  #          SecondaryOwnerAlias      = "i:05.t|$DomainFQDN|$($DomainAdminCreds.UserName)@$DomainFQDN"
+  #          Name                     = "StratexPoint RBPM"
+  #          Template                 = "STRATEXSITEDEFINITION"
+  #          PsDscRunAsCredential     = $SPSetupCredsQualified
+  #          DependsOn                = "[SPFarmSolution]InstallStratexPoint"
+  #      }
+
+        #SPSite TeamSite
+        #{
+        #    Url                      = "http://$SPTrustedSitesName/sites/team"
+        #    OwnerAlias               = "i:0#.w|$DomainNetbiosName\$($DomainAdminCreds.UserName)"
+        #    SecondaryOwnerAlias      = "i:05.t|$DomainFQDN|$($DomainAdminCreds.UserName)@$DomainFQDN"
+        #    Name                     = "Team site"
+        #    Template                 = "STS#0"
+        #    PsDscRunAsCredential     = $SPSetupCredsQualified
+        #    DependsOn                = "[xScript]SetHTTPSCertificate"
+        #}
 
         SPSite MySiteHost
         {
@@ -672,7 +702,7 @@ configuration ConfigureSPVM
             SetScript = 
             {
                 # Add a timer to avoid update conflict error (UpdatedConcurrencyException) of the UserProfileApplication persisted object
-                Start-Sleep -s 10
+                Start-Sleep -s 30
             }
             GetScript =  
             {

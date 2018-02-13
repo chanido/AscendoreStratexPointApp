@@ -639,6 +639,31 @@
               }
             }
           }
+        },
+        {
+          "apiVersion": "2016-03-30",
+          "dependsOn": [
+            "Microsoft.Compute/virtualMachines/SQLServerVM",
+            "Microsoft.Compute/virtualMachines/SQLServerVM/extensions/DSCConfigureSQLVM"
+          ],
+          "location": "[resourceGroup().location]",
+          "name": "StratexSQLConfig",
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.4",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[concat(parameters('_artifactsLocation'), '/', variables('StratexSQLConfigScriptFolder'), '/', variables('StratexSQLConfigScriptFileName'), parameters('_artifactsLocationSasToken'))]"
+              ],
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('StratexSQLConfigScriptFileName'), ' -ComputerName ', variables('generalSettings').vmSQLName, ' -SqlSvcPassword ', parameters('sqlSvcPassword'))]"
+            }
+          },
+          "tags": {
+            "displayName": "StratexSQLConfig"
+          },
+          "type": "extensions"
         }
       ]
     },
@@ -814,57 +839,33 @@
               }
             }
           }
+        },
+        {
+          "apiVersion": "2016-03-30",
+          "dependsOn": [
+            "Microsoft.Compute/virtualMachines/SharePointVM",
+            "Microsoft.Compute/virtualMachines/SharePointVM/extensions/DSCConfigureSPVM"
+          ],
+          "location": "[resourceGroup().location]",
+          "name": "StratexSharePointConfig",
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.4",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[concat(parameters('_artifactsLocation'), '/', variables('StratexSharePointConfigScriptFolder'), '/', variables('StratexSharePointConfigScriptFileName'), parameters('_artifactsLocationSasToken'))]"
+              ],
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('StratexSharePointConfigScriptFileName'), ' -SQLName ', variables('generalSettings').vmSQLName, ' -DomainFQDN ', parameters('domainFQDN'), ' -SqlSvcPassword ',  parameters('sqlSvcPassword'), ' -SPFarmUserName ', parameters('spFarmUserName'), ' -SPTrustedSitesName ', variables('generalSettings').vmSPName)]"
+            }
+          },
+          "tags": {
+            "displayName": "StratexSharePointConfig"
+          },
+          "type": "extensions"
         }
       ]
-    },
-    {
-      "apiVersion": "2016-03-30",
-      "dependsOn": [
-        "Microsoft.Compute/virtualMachines/SharePointVM",
-        "Microsoft.Compute/virtualMachines/SharePointVM/extensions/DSCConfigureSPVM"
-      ],
-      "location": "[resourceGroup().location]",
-      "name": "StratexSQLConfig",
-      "properties": {
-        "publisher": "Microsoft.Compute",
-        "type": "CustomScriptExtension",
-        "typeHandlerVersion": "1.4",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "fileUris": [
-            "[concat(parameters('_artifactsLocation'), '/', variables('StratexSQLConfigScriptFolder'), '/', variables('StratexSQLConfigScriptFileName'), parameters('_artifactsLocationSasToken'))]"
-          ],
-          "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('StratexSQLConfigScriptFileName'), ' -ComputerName ', variables('generalSettings').vmSQLName, ' -SqlSvcPassword ', parameters('sqlSvcPassword'))]"
-        }
-      },
-      "tags": {
-        "displayName": "StratexSQLConfig"
-      },
-      "type": "extensions"
-    },
-    {
-      "apiVersion": "2016-03-30",
-      "dependsOn": [
-        "CustomScriptExtension/DSCConfigureSPVM/StratexSQLConfig"
-      ],
-      "location": "[resourceGroup().location]",
-      "name": "StratexSharePointConfig",
-      "properties": {
-        "publisher": "Microsoft.Compute",
-        "type": "CustomScriptExtension",
-        "typeHandlerVersion": "1.4",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "fileUris": [
-            "[concat(parameters('_artifactsLocation'), '/', variables('StratexSharePointConfigScriptFolder'), '/', variables('StratexSharePointConfigScriptFileName'), parameters('_artifactsLocationSasToken'))]"
-          ],
-          "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('StratexSharePointConfigScriptFileName'), ' -SQLName ', variables('generalSettings').vmSQLName, ' -DomainFQDN ', parameters('domainFQDN'), ' -SqlSvcPassword ',  parameters('sqlSvcPassword'), ' -SPFarmUserName ', parameters('spFarmUserName'), ' -SPTrustedSitesName ', variables('generalSettings').vmSPName)]"
-        }
-      },
-      "tags": {
-        "displayName": "StratexSharePointConfig"
-      },
-      "type": "extensions"
     }
   ],
   "outputs": {

@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>1b7addb3-71d5-490f-ba8c-eff259fa66f2</ProjectGuid>
+    <ProjectGuid>2a7114dc-d651-4a9d-aa51-3d9ad777e4a8</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup>
     <TargetFrameworkIdentifier>Deployment</TargetFrameworkIdentifier>
@@ -31,14 +31,19 @@
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
+    <Content Include="CustomScripts\StratexSharePointConfig.ps1" />
+    <Content Include="CustomScripts\StratexSQLConfig.ps1" />
     <Content Include="Deploy-AzureResourceGroup.ps1" />
     <Content Include="dsc\ConfigureSQLVM.ps1" />
     <Content Include="dsc\ConfigureSQLVM.zip" />
-    <Content Include="dsc\ConfigureSPVM.ps1" />
+    <None Include="dsc\ConfigureSPVM.ps1" />
     <Content Include="dsc\ConfigureSPVM.zip" />
     <Content Include="dsc\ConfigureDCVM.zip" />
     <Content Include="dsc\ConfigureDCVM.ps1" />
     <Content Include="README.md" />
+    <None Include="ManualDeploy.ps1" />
+    <None Include="WSPs\StratexPoint-2016.wsp" />
+    <None Include="WSPs\Yvand-LDAPCP.wsp" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
 </Project>

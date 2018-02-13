@@ -43,6 +43,7 @@
     <None Include="dsc\ConfigureSQLVM.zip" />
     <None Include="metadata.json" />
     <None Include="README.md" />
+    <None Include="test.json" />
     <None Include="WSPs\StratexPoint-2016.wsp" />
     <None Include="WSPs\Yvand-LDAPCP.wsp" />
   </ItemGroup>
