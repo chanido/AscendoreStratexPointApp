@@ -25,7 +25,7 @@ restart-service -Force $Instance
 Add-Content c:\stratexlog.txt "Server Restarted"
 
 Add-Content c:\stratexlog.txt "Waiting 60 seconds..."
-#Start-Sleep -Seconds 60
+Start-Sleep -Seconds 60
 Add-Content c:\stratexlog.txt "Waited 60 seconds..."
 
 #Write-Host "The StratexSQLConfig file is being executed. The parameters are: ComputerName: $ComputerName, SqlSvcPassword: ####";

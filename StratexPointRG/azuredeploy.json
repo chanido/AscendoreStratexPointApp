@@ -13,22 +13,30 @@
     "sharePointVersion": {
       "type": "string",
       "defaultValue": "2016",
-      "allowedValues": [ "2013", "2016" ],
+      "allowedValues": [ "2016" ],
       "metadata": {
         "description": "Version of SharePoint farm to create."
       }
     },
     "domainFQDN": {
       "type": "string",
-      "defaultValue": "contoso.local",
+      "defaultValue": "stratex.local",
       "minLength": 5,
+      "metadata": {
+        "description": "FQDN of the AD forest to create"
+      }
+    },
+    "VMPrefix": {
+      "type": "string",
+      "defaultValue": "STRATEXPOINT",
+      "maxLength": 12,
       "metadata": {
         "description": "FQDN of the AD forest to create"
       }
     },
     "adminUserName": {
       "type": "string",
-      "defaultValue": "yvand",
+      "defaultValue": "sharepointadmin",
       "minLength": 1,
       "metadata": {
         "description": "Name of the AD and SharePoint administrator"
@@ -194,9 +202,10 @@
       "storageAccountName": "[concat('storage', uniqueString(resourceGroup().id))]",
       "vmsStorageAccountContainerName": "vhds",
       "dscScriptsFolder": "dsc",
-      "vmDCName": "DC",
-      "vmSQLName": "SQL",
-      "vmSPName": "SP"
+      "zxzxc": null,
+      "vmDCName": "[concat(parameters('VMPrefix'),'-DC')]",
+      "vmSQLName": "[concat(parameters('VMPrefix'),'-SQL')]",
+      "vmSPName": "[concat(parameters('VMPrefix'),'-SP')]"
     },
     "vNetSettings": {
       "vNetPrivateName": "[concat(resourceGroup().name, '-vnet')]",
@@ -818,7 +827,7 @@
             "DNSServer": "[variables('vmDC').nicPrivateIPAddress]",
             "DomainFQDN": "[parameters('domainFQDN')]",
             "DCName": "[variables('generalSettings').vmDCName]",
-            "SQLName": "[variables('generalSettings').vmSQLName]",
+            "SQLName": "[variables('generalSettings').vmSQLName]"
           },
           "privacy": {
             "dataCollection": "enable"

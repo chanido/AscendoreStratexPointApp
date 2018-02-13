@@ -12,11 +12,10 @@ param
     [Parameter(Mandatory)]
     [String]$SPFarmUserName,
 
-	[Parameter(Mandatory)]
-    [String] $SPTrustedSitesName,
-
 	[String] $SolutionFileName = "StratexPoint-2016.wsp"
 )
+
+$SPTrustedSitesName="spsites";
 
 Add-PSSnapin Microsoft.SharePoint.PowerShell;
 

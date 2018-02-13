@@ -12,8 +12,7 @@ param
     [Parameter(Mandatory)]
     [String]$SPFarmUserName,
 
-	[Parameter(Mandatory)]
-    [String] $SPTrustedSitesName,
+    [String] $SPTrustedSitesName = "spsites",
 
 	[String] $SolutionFileName = "StratexPoint-2016.wsp"
 )
