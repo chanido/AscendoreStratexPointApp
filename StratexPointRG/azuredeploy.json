@@ -819,7 +819,6 @@
             "DomainFQDN": "[parameters('domainFQDN')]",
             "DCName": "[variables('generalSettings').vmDCName]",
             "SQLName": "[variables('generalSettings').vmSQLName]",
-            "SPTrustedSitesName": "[variables('generalSettings').vmSPName]"
           },
           "privacy": {
             "dataCollection": "enable"

@@ -1,7 +1,7 @@
 configuration ConfigureSPVM
 {
     param
-    ( 
+    (
         [Parameter(Mandatory)]
         [String]$DNSServer,
 
@@ -32,8 +32,7 @@ configuration ConfigureSPVM
         [Parameter(Mandatory)]
         [System.Management.Automation.PSCredential]$SPPassphraseCreds,
 
-		[Parameter(Mandatory)]
-        [String] $SPTrustedSitesName
+        [String] $SPTrustedSitesName = "SPSites"
     )
 
     Import-DscResource -ModuleName xComputerManagement, xDisk, cDisk, xNetworking, xActiveDirectory, xCredSSP, xWebAdministration, SharePointDsc, xPSDesiredStateConfiguration, xDnsServer, xCertificate
@@ -46,7 +45,7 @@ configuration ConfigureSPVM
     [System.Management.Automation.PSCredential] $SPFarmCredsQualified = New-Object System.Management.Automation.PSCredential ("${DomainNetbiosName}\$($SPFarmCreds.UserName)", $SPFarmCreds.Password)
     [System.Management.Automation.PSCredential] $SPSvcCredsQualified = New-Object System.Management.Automation.PSCredential ("${DomainNetbiosName}\$($SPSvcCreds.UserName)", $SPSvcCreds.Password)
     [System.Management.Automation.PSCredential] $SPAppPoolCredsQualified = New-Object System.Management.Automation.PSCredential ("${DomainNetbiosName}\$($SPAppPoolCreds.UserName)", $SPAppPoolCreds.Password)
-    [String] $SPDBPrefix = "STRATEX_"
+    [String] $SPDBPrefix = "SP16DSC_"
     [Int] $RetryCount = 30
     [Int] $RetryIntervalSec = 30
     $ComputerName = Get-Content env:computername
@@ -621,6 +620,41 @@ configuration ConfigureSPVM
             DependsOn = "[xScript]SetHTTPSCertificate"
         }
 
+		SPFarmSolution InstallStratexPoint2 
+        {
+            LiteralPath = "F:\Setup\StratexPoint-2016.wsp"
+            Name = "StratexPoint-2016.wsp"
+            Deployed = $true
+            Ensure = "Present"
+            PsDscRunAsCredential = $SPSetupCredsQualified
+            DependsOn = "[SPFarmSolution]InstallStratexPoint"
+        }
+
+		xScript RestartSPTimerAfterStratexSolution
+        {
+            SetScript = 
+            {
+                # The deployment of the solution is made in owstimer.exe tends to fail very often, so restart the service before to mitigate this risk
+                ResetOWSTIMER
+				DeployStratexWSP
+				ResetOWSTIMER
+				ConfigureStratexWSP
+				
+            }
+            GetScript =  
+            {
+                # This block must return a hashtable. The hashtable must only contain one key Result and the value must be of type String.
+                return @{ "Result" = "false" }
+            }
+            TestScript = 
+            {
+                # If it returns $false, the SetScript block will run. If it returns $true, the SetScript block will not run.
+               return $false
+            }
+            PsDscRunAsCredential = $DomainAdminCredsQualified
+            DependsOn = "[SPFarmSolution]InstallStratexPoint2"
+        }
+
         #SPSite DevSite
         #{
         #    Url                      = "http://$SPTrustedSitesName/"
@@ -643,16 +677,16 @@ configuration ConfigureSPVM
   #          DependsOn                = "[SPFarmSolution]InstallStratexPoint"
   #      }
 
-        #SPSite TeamSite
-        #{
-        #    Url                      = "http://$SPTrustedSitesName/sites/team"
-        #    OwnerAlias               = "i:0#.w|$DomainNetbiosName\$($DomainAdminCreds.UserName)"
-        #    SecondaryOwnerAlias      = "i:05.t|$DomainFQDN|$($DomainAdminCreds.UserName)@$DomainFQDN"
-        #    Name                     = "Team site"
-        #    Template                 = "STS#0"
-        #    PsDscRunAsCredential     = $SPSetupCredsQualified
-        #    DependsOn                = "[xScript]SetHTTPSCertificate"
-        #}
+        SPSite TeamSite
+        {
+            Url                      = "http://$SPTrustedSitesName/sites/team"
+            OwnerAlias               = "i:0#.w|$DomainNetbiosName\$($DomainAdminCreds.UserName)"
+            SecondaryOwnerAlias      = "i:05.t|$DomainFQDN|$($DomainAdminCreds.UserName)@$DomainFQDN"
+            Name                     = "Team site"
+            Template                 = "STS#0"
+            PsDscRunAsCredential     = $SPSetupCredsQualified
+            DependsOn                = "[xScript]SetHTTPSCertificate"
+        }
 
         SPSite MySiteHost
         {
@@ -734,6 +768,67 @@ configuration ConfigureSPVM
     }
 }
 
+function DeployStratexWSP
+{
+	$SolutionFileName = "StratexPoint-2016.wsp"
+
+	Install-SPSolution -Identity StratexPoint-2016.wsp -GACDeployment -AllWebApplications -Force
+	
+	$JobName = "*solution-deployment*$SolutionFileName*"
+	$job = Get-SPTimerJob | ?{ $_.Name -like $JobName }
+	
+	if ($job -eq $null) 
+	{
+	  Write-Host Timer job not found for $SolutionFileName
+	}
+	else
+	{
+	  $JobFullName = $job.Name
+	  Write-Host -NoNewLine Waiting to finish job $JobFullName
+	  
+	  while ((Get-SPTimerJob $JobFullName) -ne $null) 
+	  {
+	    Write-Host -NoNewLine .
+	    Start-Sleep -Seconds 2
+	  }
+	  Write-Host Finished
+	}
+}
+
+function ConfigureStratexWSP
+{
+	#Write Web Properties
+
+	$WebApp = Get-SPWebApplication "http://$SPTrustedSitesName/"
+	
+	[Reflection.Assembly]::"Ascendore.Utils.dll"
+	
+	$PathToDatebaseFile = [Ascendore.Utils.StratexConstants]::PathToDatabaseFileKey;
+	$PathToDatebaseLogFile = [Ascendore.Utils.StratexConstants]::PathToDatabaseLogFileKey;
+	$DBCreationStringKey = [Ascendore.Utils.StratexConstants]::DBCreationString;
+	$DBUpdateStringKey = [Ascendore.Utils.StratexConstants]::DBUpdateString;
+	$DBAutoConfigDisableKey = [Ascendore.Utils.StratexConstants]::DBAutoconfigDisabledKey
+	
+	[Ascendore.Utils.Common]::SetWebApplicationPropertyCypher($WebApp, $PathToDatebaseFile, "C:\Program Files\Microsoft SQL Server\MSSQL13.MSSQLSERVER\MSSQL\DATA")
+	[Ascendore.Utils.Common]::SetWebApplicationPropertyCypher($WebApp, $PathToDatebaseLogFile, "C:\Program Files\Microsoft SQL Server\MSSQL13.MSSQLSERVER\MSSQL\DATA")
+	
+	$DBCreationValue = "Data Source=$SQLName;User ID=StratexDBOwner;Password=$($SPSetupCreds.Password);Trusted_Connection=False;"
+	$DBUpdateValue = "Data Source=$SQLName;User ID=StratexDBUpdater;Password=$($SPSetupCreds.Password);Trusted_Connection=False;"
+	
+	[Ascendore.Utils.Common]::SetWebApplicationPropertyCypher($WebApp, $DBCreationStringKey, $DBCreationValue)
+	[Ascendore.Utils.Common]::SetWebApplicationPropertyCypher($WebApp, $DBUpdateStringKey, $DBUpdateValue)
+	
+	
+	[Ascendore.Utils.Common]::SetWebApplicationPropertyCypher($WebApp, $DBAutoConfigDisableKey, "false")
+}
+
+function CreateStratexRootSite
+{
+	$w = Get-SPWebApplication "http://$SPTrustedSitesName/"
+
+	New-SPSite http://spsites -OwnerAlias "i:0#.w|$DomainNetbiosName\$($DomainAdminCreds.UserName)" -HostHeaderWebApplication $w -Name "StratexPoint RBPM" -Template "StratexSiteDefinition#0"
+}
+
 function Get-LatestGitHubRelease
 {
     [OutputType([string])]
@@ -778,6 +873,12 @@ function Get-SPDSCInstalledProductVersion
     $pathToSearch = "C:\Program Files\Common Files\microsoft shared\Web Server Extensions\*\ISAPI\Microsoft.SharePoint.dll"
     $fullPath = Get-Item $pathToSearch | Sort-Object { $_.Directory } -Descending | Select-Object -First 1
     return (Get-Command $fullPath).FileVersionInfo
+}
+
+function ResetOWSTIMER
+{
+    $farm = Get-SPFarm
+	$farm.TimerService.Instances | foreach { $_.Stop(); $_.Start(); }
 }
 
 <#
