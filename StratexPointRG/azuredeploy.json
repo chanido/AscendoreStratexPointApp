@@ -735,7 +735,7 @@
               "fileUris": [
                 "[concat(parameters('_artifactsLocation'), '/', variables('StratexCustomScriptsFolder'), '/', variables('StratexSharePointConfigScriptFileName'), parameters('_artifactsLocationSasToken'))]"
               ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('StratexSharePointConfigScriptFileName'), ' -SQLName ', variables('generalSettings').vmSQLName, ' -DomainFQDN ', parameters('domainFQDN'), ' -SqlSvcPassword ',  parameters('sqlSvcPassword'), ' -SPFarmUserName ', parameters('spFarmUserName'), ' -SPTrustedSitesName ', variables('generalSettings').vmSPName)]"
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('StratexSharePointConfigScriptFileName'), ' -SQLName ', variables('generalSettings').vmSQLName, ' -DomainFQDN ', parameters('domainFQDN'), ' -SqlSvcPassword ',  parameters('sqlSvcPassword'), ' -SPFarmUserName ', parameters('spFarmUserName'))]"
             }
           },
           "tags": {
