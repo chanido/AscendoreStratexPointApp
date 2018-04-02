@@ -1,0 +1,446 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+  "handler": "Microsoft.Compute.MultiVm",
+  "version": "0.1.2-preview",
+  "parameters": {
+    "basics": [
+      {}
+    ],
+    "steps": [
+      {
+        "name": "vmCredentials",
+        "label": "StratexPoint Application Configuration",
+        "bladeTitle": "Application credentials",
+        "subLabel": {
+          "preValidation": "Provide VM credentials",
+          "postValidation": "Great - let's move on!"
+        },
+        "elements": [
+          {
+            "name": "adminUserName",
+            "type": "Microsoft.Compute.UserNameTextBox",
+            "label": "Admin username",
+            "osPlatform": "Windows",
+            "constraints": {
+              "required": true
+            },
+            "toolTip": "Name of the AD and SharePoint administrator"
+          },
+          {
+            "name": "adminPassword",
+            "type": "Microsoft.Compute.CredentialsCombo",
+            "label": {
+              "password": "Password",
+              "confirmPassword": "Confirm password"
+            },
+            "osPlatform": "Windows",
+            "constraints": {
+              "customPasswordRegex": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",
+              "customValidationMessage": "Input must meet password complexity requirements as documented for property 'adminPassword' in https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/virtualmachines-create-or-update",
+              "required": true
+            },
+            "options": {
+              "hideConfirmation": false
+            },
+            "toolTip": {
+              "password": "Password of the AD and SharePoint administrator"
+            },
+            "visible": true
+          },
+          {
+            "name": "adfsSvcUserName",
+            "type": "Microsoft.Compute.UserNameTextBox",
+            "label": "ADFS Service username",
+            "osPlatform": "Windows",
+            "constraints": {
+              "required": true
+            },
+            "toolTip": "Name of the ADFS Service administrator"
+          },
+          {
+            "name": "adfsSvcPassword",
+            "type": "Microsoft.Compute.CredentialsCombo",
+            "label": {
+              "password": "Password",
+              "confirmPassword": "Confirm password"
+            },
+            "osPlatform": "Windows",
+            "constraints": {
+              "customPasswordRegex": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",
+              "customValidationMessage": "Input must meet password complexity requirements as documented for property 'adminPassword' in https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/virtualmachines-create-or-update",
+              "required": true
+            },
+            "options": {
+              "hideConfirmation": false
+            },
+            "toolTip": {
+              "password": "Password of the  ADFS Service administrator"
+            },
+            "visible": true
+          },
+          {
+            "name": "sqlSvcUserName",
+            "type": "Microsoft.Compute.UserNameTextBox",
+            "label": "SQL Service username",
+            "osPlatform": "Windows",
+            "constraints": {
+              "required": true
+            },
+            "toolTip": "Name of the SQL Service administrator"
+          },
+          {
+            "name": "sqlSvcPassword",
+            "type": "Microsoft.Compute.CredentialsCombo",
+            "label": {
+              "password": "Password",
+              "confirmPassword": "Confirm password"
+            },
+            "osPlatform": "Windows",
+            "constraints": {
+              "customPasswordRegex": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",
+              "customValidationMessage": "Input must meet password complexity requirements as documented for property 'adminPassword' in https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/virtualmachines-create-or-update",
+              "required": true
+            },
+            "options": {
+              "hideConfirmation": false
+            },
+            "toolTip": {
+              "password": "Password of the SQL Service administrator"
+            },
+            "visible": true
+          },
+          {
+            "name": "spSetupUserName",
+            "type": "Microsoft.Compute.UserNameTextBox",
+            "label": "SharePoint Setup username",
+            "osPlatform": "Windows",
+            "constraints": {
+              "required": true
+            },
+            "toolTip": "Name of the service account that will create and configure the SharePoint farm"
+          },
+          {
+            "name": "spSetupPassword",
+            "type": "Microsoft.Compute.CredentialsCombo",
+            "label": {
+              "password": "Password",
+              "confirmPassword": "Confirm password"
+            },
+            "osPlatform": "Windows",
+            "constraints": {
+              "customPasswordRegex": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",
+              "customValidationMessage": "Input must meet password complexity requirements as documented for property 'adminPassword' in https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/virtualmachines-create-or-update",
+              "required": true
+            },
+            "options": {
+              "hideConfirmation": false
+            },
+            "toolTip": {
+              "password": "Password of the service account that will create and configure the SharePoint farm"
+            },
+            "visible": true
+          },
+          {
+            "name": "spFarmUserName",
+            "type": "Microsoft.Compute.UserNameTextBox",
+            "label": "SharePoint Farm username",
+            "osPlatform": "Windows",
+            "constraints": {
+              "required": true
+            },
+            "toolTip": "Name of the service account that will run SharePoint central administration and Timer services"
+          },
+          {
+            "name": "spFarmPassword",
+            "type": "Microsoft.Compute.CredentialsCombo",
+            "label": {
+              "password": "Password",
+              "confirmPassword": "Confirm password"
+            },
+            "osPlatform": "Windows",
+            "constraints": {
+              "customPasswordRegex": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",
+              "customValidationMessage": "Input must meet password complexity requirements as documented for property 'adminPassword' in https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/virtualmachines-create-or-update",
+              "required": true
+            },
+            "options": {
+              "hideConfirmation": false
+            },
+            "toolTip": {
+              "password": "Password of the service account that will run SharePoint central administration and Timer services"
+            },
+            "visible": true
+          },
+          {
+            "name": "spSvcUserName",
+            "type": "Microsoft.Compute.UserNameTextBox",
+            "label": "SharePoint Service username",
+            "osPlatform": "Windows",
+            "constraints": {
+              "required": true
+            },
+            "toolTip": "Name of the service account that will run SharePoint service applications"
+          },
+          {
+            "name": "spSvcPassword",
+            "type": "Microsoft.Compute.CredentialsCombo",
+            "label": {
+              "password": "Password",
+              "confirmPassword": "Confirm password"
+            },
+            "osPlatform": "Windows",
+            "constraints": {
+              "customPasswordRegex": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",
+              "customValidationMessage": "Input must meet password complexity requirements as documented for property 'adminPassword' in https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/virtualmachines-create-or-update",
+              "required": true
+            },
+            "options": {
+              "hideConfirmation": false
+            },
+            "toolTip": {
+              "password": "Password of the service account that will run SharePoint service applications"
+            },
+            "visible": true
+          },
+          {
+            "name": "spAppPoolUserName",
+            "type": "Microsoft.Compute.UserNameTextBox",
+            "label": "Web Application Pool username",
+            "osPlatform": "Windows",
+            "constraints": {
+              "required": true
+            },
+            "toolTip": "Name of the service account that will run SharePoint web applications"
+          },
+          {
+            "name": "spAppPoolPassword",
+            "type": "Microsoft.Compute.CredentialsCombo",
+            "label": {
+              "password": "Password",
+              "confirmPassword": "Confirm password"
+            },
+            "osPlatform": "Windows",
+            "constraints": {
+              "customPasswordRegex": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",
+              "customValidationMessage": "Input must meet password complexity requirements as documented for property 'adminPassword' in https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/virtualmachines-create-or-update",
+              "required": true
+            },
+            "options": {
+              "hideConfirmation": false
+            },
+            "toolTip": {
+              "password": "Password of the service account that will run SharePoint web applications"
+            },
+            "visible": true
+          }
+        ]
+      },
+      {
+        "name": "appSettings",
+        "label": "StratexPoint Farm settings",
+        "subLabel": {
+          "preValidation": "Configure the StratexPoint Farm",
+          "postValidation": "Done!"
+        },
+        "bladeTitle": "Settings",
+        "elements": [
+          {
+            "name": "vmDCSize",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "Domain Controller VM Size",
+            "toolTip": "",
+            "recommendedSizes": [
+              "Standard_F4",
+              "Standard_A4_v2",
+              "Standard_A8_v2"
+            ],
+            "constraints": {
+              "allowedSizes": [],
+              "excludedSizes": []
+            },
+            "osPlatform": "Windows",
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2016-Datacenter"
+            },
+            "count": 1,
+            "visible": true
+          },
+          {
+            "name": "vmSQLSize",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "SQL Server VM Size",
+            "toolTip": "",
+            "recommendedSizes": [
+              "Standard_A4_v2",
+              "Standard_A8_v2"
+            ],
+            "constraints": {
+              "allowedSizes": [],
+              "excludedSizes": []
+            },
+            "osPlatform": "Windows",
+            "imageReference": {
+              "publisher": "MicrosoftSQLServer",
+              "offer": "SQL2016SP1-WS2016",
+              "sku": "Standard"
+            },
+            "count": 1,
+            "visible": true
+          },
+          {
+            "name": "vmSPSize",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "SharePoint Server VM Size",
+            "toolTip": "",
+            "recommendedSizes": [
+              "Standard_A4_v2",
+              "Standard_A8_v2"
+            ],
+            "constraints": {
+              "allowedSizes": [],
+              "excludedSizes": []
+            },
+            "osPlatform": "Windows",
+            "imageReference": {
+              "publisher": "MicrosoftSharePoint",
+              "offer": "MicrosoftSharePointServer",
+              "sku": "2016"
+            },
+            "count": 1,
+            "visible": true
+          },
+          {
+            "name": "IPconfiguration",
+            "type": "Microsoft.Network.PublicIpAddressCombo",
+            "label": {
+              "publicIpAddress": "Public IP address",
+              "domainNameLabel": "Domain name label"
+            },
+            "toolTip": {
+              "publicIpAddress": "",
+              "domainNameLabel": ""
+            },
+            "defaultValue": {
+              "publicIpAddressName": "stratexpoint",
+              "domainNameLabel": "stratex.local"
+            },
+            "constraints": {
+              "required": {
+                "domainNameLabel": true
+              }
+            },
+            "options": {
+              "hideNone": true,
+              "hideDomainNameLabel": false,
+              "hideExisting": true
+            },
+            "visible": true
+          },
+          {
+            "name": "trialOrProd",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "Trial or Production?",
+            "defaultValue": "Trial",
+            "toolTip": "For trial, cost will be minimal. For prod, resources are optimized.",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "Trial",
+                  "value": "Trial"
+                },
+                {
+                  "label": "Production",
+                  "value": "Production"
+                }
+              ]
+            },
+            "visible": true
+          },
+          {
+            "name": "virtualNetwork",
+            "type": "Microsoft.Network.VirtualNetworkCombo",
+            "label": {
+              "virtualNetwork": "Virtual network",
+              "subnets": "Subnets"
+            },
+            "toolTip": {
+              "virtualNetwork": "Virtual Network Name",
+              "subnets": "Subnet requried for Azure Application"
+            },
+            "defaultValue": {
+              "name": "app-vnet",
+              "addressPrefixSize": "/22"
+            },
+            "constraints": {
+              "minAddressPrefixSize": "/22"
+            },
+            "subnets": {
+              "subnet1": {
+                "label": "Subnet name",
+                "defaultValue": {
+                  "name": "app-subnet",
+                  "addressPrefixSize": "/24"
+                },
+                "constraints": {
+                  "minAddressPrefixSize": "/24",
+                  "minAddressCount": 12,
+                  "requireContiguousAddresses": false
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "vmName": "[steps('appSettings').vmName]",
+      "trialOrProduction": "[steps('appSettings').trialOrProd]",
+      "adminUsername": "[steps('vmCredentials').adminUsername]",
+      "adminPassword": "[steps('vmCredentials').adminPassword.password]",
+      "adfsSvcUserName": "[steps('vmCredentials').adfsSvcUserName]",
+      "adfsSvcPassword": "[steps('vmCredentials').adfsSvcPassword.password]",
+      "sqlSvcUserName": "[steps('vmCredentials').sqlSvcUserName]",
+      "sqlSvcPassword": "[steps('vmCredentials').sqlSvcPassword.password]",
+      "spSetupUserName": "[steps('vmCredentials').spSetupUserName]",
+      "spSetupPassword": "[steps('vmCredentials').spSetupPassword.password]",
+      "spFarmUserName": "[steps('vmCredentials').spFarmUserName]",
+      "spFarmPassword": "[steps('vmCredentials').spFarmPassword.password]",
+      "spSvcUserName": "[steps('vmCredentials').spSvcUserName]",
+      "spSvcPassword": "[steps('vmCredentials').spSvcPassword.password]",
+      "spAppPoolUserName": "[steps('vmCredentials').spAppPoolUserName]",
+      "spAppPoolPassword": "[steps('vmCredentials').spAppPoolPassword.password]",
+      "vmDCSize": "[steps('appSettings').vmDCSize]",
+      "vmSQLSize": "[steps('appSettings').vmSQLSize]",
+      "vmSPSize": "[steps('appSettings').vmSPSize]",
+      "domainFQDN": "[steps('appSettings').IPconfiguration.domainNameLabel]",
+      "dnsLabelPrefix": "[steps('appSettings').IPconfiguration.name]",
+      "applicationResourceName": "[steps('appSettings').vmName]"
+    },
+    "adminPassword": {
+      "value": "FarmAdm$2016"
+    },
+    "adfsSvcPassword": {
+      "value": "FarmAdm$2016"
+    },
+    "sqlSvcPassword": {
+      "value": "FarmAdm$2016"
+    },
+    "spSetupPassword": {
+      "value": "FarmAdm$2016"
+    },
+    "spFarmPassword": {
+      "value": "FarmAdm$2016"
+    },
+    "spSvcPassword": {
+      "value": "FarmAdm$2016"
+    },
+    "spAppPoolPassword": {
+      "value": "FarmAdm$2016"
+    },
+    "dnsLabelPrefix": {
+      "value": "stcrg"
+    }
+  }
+}

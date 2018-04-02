@@ -33,7 +33,8 @@ $DeploymentParameters = @{
 	Name = "StratexPointAppDeployment";
 	ResourceGroup = $ResourceGroupName;
 	Mode = $DeploymentMode;
-	TemplateFile= "$PSScriptRoot\azuredeploy.json";
+	#TemplateFile= "$PSScriptRoot\azuredeploy.json";
+	TemplateFile= "$PSScriptRoot\mainTemplate.json";
 	TemplateParameterObject = @{
 		domainFQDN = "stratexpoint.local";
 		adminUserName = "FarmAdm";
@@ -73,5 +74,20 @@ Get-AzureRmVMUsage -Location uksouth
 Get-AzureRmResourceGroup
 
 Get-TimeZone -ListAvailable
+
+((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Web).ResourceTypes | Where-Object ResourceTypeName -eq sites).ApiVersions
+
+((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Network).ResourceTypes).ApiVersions
+((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Compute).ResourceTypes | Where-Object ResourceTypeName -eq VirtualMachines).ApiVersions
+
+((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Storage).ResourceTypes | Where-Object ResourceTypeName -eq storageAccounts).ApiVersions
+((Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Network).ResourceTypes | Where-Object ResourceTypeName -eq publicIPAddresses).ApiVersions
+
+[System.TimeZoneInfo]::GetSystemTimeZones().DisplayName
+[System.TimeZoneInfo]::GetSystemTimeZones().Id
+[System.TimeZoneInfo]::Local.Id
+
+
+
 
 ############################ OTHER TESTS ############################

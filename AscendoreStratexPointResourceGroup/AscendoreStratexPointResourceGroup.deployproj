@@ -25,15 +25,13 @@
   <Import Condition=" Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Deployment\1.1\DeploymentProject.targets') " Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Deployment\1.1\DeploymentProject.targets" />
   <!-- vertag<:>end -->
   <ItemGroup>
-    <Content Include="azuredeploy.json" />
-    <Content Include="azuredeploy.parameters.json" />
     <None Include="CHANGELOG.md" />
     <Content Include="CustomScripts\StratexSQLConfig.ps1" />
     <Content Include="CustomScripts\StratexSharePointConfig.ps1" />
+    <None Include="createUiDefinition.json" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
-    <Content Include="Deploy-AzureResourceGroup.ps1" />
     <None Include="DeploySharePointFarm.ps1" />
     <None Include="dsc\ConfigureDCVM.ps1" />
     <None Include="dsc\ConfigureDCVM.zip" />
@@ -41,9 +39,9 @@
     <None Include="dsc\ConfigureSPVM.zip" />
     <None Include="dsc\ConfigureSQLVM.ps1" />
     <None Include="dsc\ConfigureSQLVM.zip" />
+    <None Include="mainTemplate.json" />
     <None Include="metadata.json" />
     <None Include="README.md" />
-    <None Include="test.json" />
     <None Include="WSPs\StratexPoint-2016.wsp" />
     <None Include="WSPs\Yvand-LDAPCP.wsp" />
   </ItemGroup>

@@ -1,4 +1,20 @@
-# Change log for AzureRM template for SharePoint 2016 and 2013 configured with ADFS
+# Change log for AzureRM template for StratexPoint 2016
+
+## 02 April 2018
+
+* Removed test.json
+* Updated api versions
+* Hidden existing publicIps in the createUiDefinition
+* Added TimeZoneSelector https://docs.microsoft.com/es-es/azure/managed-applications/create-uidefinition-overview
+* Changed Time Info of the farm to [System.TimeZoneInfo]::Local.Id
+
+## 28 March 2018
+
+* Removed Comments from createUiDefinition.json
+* Removed file azuredeploy.parameters.json
+* Removed AscendoreStratexPointResourceGroup.deployproj
+* Removed Deployment.targets
+* Removed Deploy-AzureResourceGroup.ps1
 
 ## September 2017 release
 
