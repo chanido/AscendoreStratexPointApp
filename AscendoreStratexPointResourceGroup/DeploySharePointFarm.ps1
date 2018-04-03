@@ -51,17 +51,19 @@ $DeploymentParameters = @{
 		spSvcPassword = $Password;
 		spAppPoolUserName = "SPApplicationPool";
 		spAppPoolPassword = $Password;
-		spPassphrase = "Time you enjoy wasting is not wasted time";
+		#SPPassphraseCreds = "Time you enjoy wasting is not wasted time";
 		vmDCSize = "Standard_A2_v2";#"Standard_A1_v2";
 		vmSQLSize = "Standard_A4_v2";
 		vmSPSize = "Standard_A4_v2";
-		vmsTimeZone = "GMT Standard Time";
+		#vmsTimeZone = "GMT Standard Time";
 		dnsLabelPrefix="stratexpointapp";
 	};
 };
 
+$properties = @{"AccountType"="Standard_LRS"}
+
 write-host "Starting the deployment" -foregroundcolor "green";
-New-AzureRmResourceGroupDeployment @DeploymentParameters -Force;
+New-AzureRmResourceGroupDeployment @DeploymentParameters -storageAccountType Standard_GRS -Force;
 write-host "Deployment finished" -foregroundcolor "blue";
 
 ############################ Resource Deployment ############################
