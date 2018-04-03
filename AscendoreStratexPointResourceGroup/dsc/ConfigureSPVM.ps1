@@ -53,6 +53,9 @@ configuration ConfigureSPVM
 	$LdapcpLink = "https://github.com/chanido/AscendoreStratexPointApp/raw/master/AscendoreStratexPointResourceGroup/WSPs/Yvand-LDAPCP.wsp";#(Get-LatestGitHubRelease -repo "Yvand/LDAPCP" -artifact "LDAPCP.wsp")
     $StratexPointLink = "https://github.com/chanido/AscendoreStratexPointApp/raw/master/AscendoreStratexPointResourceGroup/WSPs/StratexPoint-2016.wsp";
 
+	Add-Content c:\stratexlogSPVM.txt "The ConfigureSPVM file is being executed. The parameters are: Name = $SPTrustedSitesName  Zone = $DomainFQDN   DnsServer = $DCName   Target = $ComputerName.$DomainFQDN";
+	
+
     Node localhost
     {
         LocalConfigurationManager

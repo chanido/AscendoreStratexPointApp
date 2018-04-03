@@ -57,13 +57,15 @@ $DeploymentParameters = @{
 		vmSPSize = "Standard_A4_v2";
 		#vmsTimeZone = "GMT Standard Time";
 		dnsLabelPrefix="stratexpointapp";
+		accountType="Standard_RAGRS";
+		storageAccountType="Standard_RAGRS";
 	};
 };
 
 $properties = @{"AccountType"="Standard_LRS"}
 
 write-host "Starting the deployment" -foregroundcolor "green";
-New-AzureRmResourceGroupDeployment @DeploymentParameters -storageAccountType Standard_GRS -Force;
+New-AzureRmResourceGroupDeployment @DeploymentParameters -Force;
 write-host "Deployment finished" -foregroundcolor "blue";
 
 ############################ Resource Deployment ############################
